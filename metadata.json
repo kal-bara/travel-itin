@@ -1,0 +1,6 @@
+{
+  "name": "3 Days in Kuala Lumpur - Interactive Guide",
+  "description": "Interactive travel itinerary and Google Maps guide for an optimized 3-day exploration of Kuala Lumpur with zero backtracking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
