@@ -12,7 +12,7 @@ export const KL_26_01_META: DestinationMeta = {
   badge: 'Smarter Flow • Zero Backtracking',
   subtitle: 'North & Central Heritage, West Belt / PJ, Ampang & Chinatown',
   description:
-    'All exact 17 vlog stops preserved, reorganized into tight geographic clusters with interactive Google Maps to save 1.5–2 hours of road traffic daily.',
+    'All 16 curated stops preserved, reorganized into tight geographic clusters with interactive Google Maps to save 1.5–2 hours of road traffic daily.',
   totalDays: 3,
   totalStops: 16,
 };
