@@ -33,3 +33,24 @@ export interface DayItinerary {
   places: Place[];
   googleMapsDirectionsUrl: string;
 }
+
+export interface DestinationMeta {
+  code: string; // e.g. "KL-26-01"
+  cityCode: string; // e.g. "KL"
+  year: string; // e.g. "26"
+  sequence: string; // e.g. "01"
+  cityName: string; // e.g. "Kuala Lumpur"
+  country: string; // e.g. "malaysia"
+  countryName: string; // e.g. "Malaysia"
+  title: string;
+  badge: string;
+  subtitle: string;
+  description: string;
+  totalDays: number;
+  totalStops: number;
+}
+
+export interface Destination {
+  meta: DestinationMeta;
+  days: DayItinerary[];
+}

@@ -2,12 +2,12 @@ import { useState, useEffect, useCallback } from 'react';
 import {
   Map,
   AdvancedMarker,
-  Pin,
   InfoWindow,
   useMap,
 } from '@vis.gl/react-google-maps';
 import { DayItinerary, Place } from '../types';
 import { MapPolyline } from './MapPolyline';
+import { MapMarkerPin } from './MapMarkerPin';
 import { ExternalLink, RotateCcw, MapPin, Navigation, Clock, Sparkles } from 'lucide-react';
 
 interface DayGoogleMapProps {
@@ -131,7 +131,7 @@ export function DayGoogleMap({
             strokeWeight={4}
           />
 
-          {/* Markers */}
+          {/* Markers with high-visibility numbering ON and NEAR the pin */}
           {day.places.map((place) => {
             const isSelected = selectedPlace?.id === place.id;
             return (
@@ -140,16 +140,13 @@ export function DayGoogleMap({
                 position={place.coordinates}
                 title={`${place.number}. ${place.name}`}
                 onClick={() => onSelectPlace(place)}
-                zIndex={isSelected ? 50 : 10 + place.number}
+                zIndex={isSelected ? 60 : 10 + place.number}
               >
-                <Pin
-                  background={isSelected ? '#1f2937' : day.color}
-                  borderColor="#ffffff"
-                  glyphColor="#ffffff"
-                  scale={isSelected ? 1.3 : 1.05}
-                >
-                  <span className="text-xs font-bold">{place.number}</span>
-                </Pin>
+                <MapMarkerPin
+                  number={place.number}
+                  color={day.color}
+                  isSelected={isSelected}
+                />
               </AdvancedMarker>
             );
           })}

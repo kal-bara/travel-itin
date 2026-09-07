@@ -2,12 +2,12 @@ import { useState, useCallback, useEffect } from 'react';
 import {
   Map,
   AdvancedMarker,
-  Pin,
   InfoWindow,
   useMap,
 } from '@vis.gl/react-google-maps';
 import { DayItinerary, Place } from '../types';
 import { MapPolyline } from './MapPolyline';
+import { MapMarkerPin } from './MapMarkerPin';
 import {
   RotateCcw,
   Navigation,
@@ -184,7 +184,7 @@ export function MasterMapView({
               />
             ))}
 
-            {/* Render markers for each place */}
+            {/* Render markers with numbering ON and NEAR the pin */}
             {displayedDays.flatMap((day) =>
               day.places.map((place) => {
                 const isSelected = selectedPlace?.id === place.id;
@@ -196,16 +196,11 @@ export function MasterMapView({
                     onClick={() => onSelectPlace(place)}
                     zIndex={isSelected ? 60 : 10 + place.number}
                   >
-                    <Pin
-                      background={isSelected ? '#111827' : day.color}
-                      borderColor="#ffffff"
-                      glyphColor="#ffffff"
-                      scale={isSelected ? 1.3 : 1.05}
-                    >
-                      <span className="text-[11px] font-bold">
-                        D{day.dayNumber}-{place.number}
-                      </span>
-                    </Pin>
+                    <MapMarkerPin
+                      number={place.number}
+                      color={day.color}
+                      isSelected={isSelected}
+                    />
                   </AdvancedMarker>
                 );
               })
