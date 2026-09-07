@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Key, ExternalLink, CheckCircle2, ChevronDown, ChevronUp, ShieldCheck } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface ApiKeyBannerProps {
   apiKey: string;
@@ -13,8 +14,18 @@ export function ApiKeyBanner({ apiKey, onUpdateKey }: ApiKeyBannerProps) {
   const isConfigured = Boolean(apiKey && apiKey.trim().length > 5);
 
   const handleSave = () => {
-    onUpdateKey(tempKey.trim());
+    const trimmed = tempKey.trim();
+    onUpdateKey(trimmed);
     setIsOpen(false);
+    if (trimmed.length > 5) {
+      toast.success('Google Maps Platform API key applied', {
+        description: 'Interactive maps and custom marker pins reloaded successfully',
+      });
+    } else {
+      toast('API key cleared', {
+        description: 'Maps falling back to default configuration',
+      });
+    }
   };
 
   return (

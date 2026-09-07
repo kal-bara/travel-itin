@@ -5,6 +5,7 @@
 
 import { useState } from 'react';
 import { APIProvider } from '@vis.gl/react-google-maps';
+import { Toaster, toast } from 'sonner';
 import { ApiKeyBanner } from './components/ApiKeyBanner';
 import {
   DESTINATIONS,
@@ -75,6 +76,9 @@ export default function App() {
             <DestinationComponent />
           </main>
         </div>
+
+        {/* Sonner Toast Notification Center (Emil Kowalski) */}
+        <Toaster richColors position="bottom-right" closeButton />
       </div>
     </APIProvider>
   );

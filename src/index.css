@@ -1,1 +1,17 @@
 @import "tailwindcss";
+
+:root {
+  /* Emil Kowalski's signature strong easing curves */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Tactile press feedback from emil-design-eng: scale(0.97) on active with custom ease-out */
+button, [role="button"] {
+  transition: transform 160ms var(--ease-out), background-color 150ms ease, border-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
+}
+
+button:active, [role="button"]:active {
+  transform: scale(0.97);
+}

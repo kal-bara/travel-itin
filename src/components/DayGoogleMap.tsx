@@ -9,6 +9,7 @@ import { DayItinerary, Place } from '../types';
 import { MapPolyline } from './MapPolyline';
 import { MapMarkerPin } from './MapMarkerPin';
 import { ExternalLink, RotateCcw, MapPin, Navigation, Clock, Sparkles } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface DayGoogleMapProps {
   day: DayItinerary;
@@ -85,8 +86,9 @@ export function DayGoogleMap({
             onClick={() => {
               onSelectPlace(null);
               setResetTrigger((prev) => prev + 1);
+              toast('Map centered to full route', { duration: 1500 });
             }}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-stone-600 bg-white hover:bg-stone-100 border border-stone-200 shadow-2xs font-medium transition cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-stone-600 bg-white hover:bg-stone-100 border border-stone-200 shadow-2xs font-medium cursor-pointer"
             title="Reset zoom to show all stops"
           >
             <RotateCcw className="w-3.5 h-3.5" />
@@ -97,6 +99,11 @@ export function DayGoogleMap({
             href={day.googleMapsDirectionsUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => {
+              toast.success(`Opening Day ${day.dayNumber} Route in Google Maps`, {
+                description: `${day.places.length} stops loaded for navigation`,
+              });
+            }}
             className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 font-semibold transition"
             title="Open turn-by-turn route in Google Maps app or browser"
           >

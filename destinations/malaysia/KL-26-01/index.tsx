@@ -5,6 +5,8 @@
  */
 
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { toast } from 'sonner';
 import { Place } from '@/src/types';
 import { KL_26_01_DESTINATION, KL_26_01_DAYS, KL_26_01_META } from './data';
 import { DayGoogleMap } from '@/src/components/DayGoogleMap';
@@ -36,6 +38,12 @@ export function KL2601DestinationView({
 
   const handleSelectPlace = (place: Place | null) => {
     setSelectedPlaceId(place ? place.id : null);
+    if (place) {
+      toast(`Focused on Stop #${place.number}: ${place.name}`, {
+        description: `${place.time} • ${place.area}`,
+        duration: 2500,
+      });
+    }
   };
 
   const destination = KL_26_01_DESTINATION;
@@ -81,34 +89,66 @@ export function KL2601DestinationView({
           </span>
         </div>
 
-        {/* View Mode Switcher */}
-        <div className="inline-flex items-center bg-white/90 p-1 rounded-xl border border-amber-300/80 shadow-xs">
+        {/* View Mode Switcher with Emil Kowalski spring-animated sliding pill */}
+        <div className="relative inline-flex items-center bg-white/95 p-1 rounded-xl border border-amber-300/80 shadow-xs">
           <button
             type="button"
             id="tab-daily-view"
-            onClick={() => setViewMode('daily')}
-            className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
+            onClick={() => {
+              if (viewMode !== 'daily') {
+                setViewMode('daily');
+                toast('Switched to Daily Cards & Maps', {
+                  description: 'Day-by-day sequential itineraries with embedded Google Maps',
+                });
+              }
+            }}
+            className={`relative z-10 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-colors duration-150 ${
               viewMode === 'daily'
-                ? 'bg-amber-800 text-white shadow-xs'
+                ? 'text-white'
                 : 'text-stone-600 hover:text-stone-900'
             }`}
           >
-            <ListOrdered className="w-3.5 h-3.5" />
-            <span>Daily Cards & Maps</span>
+            {viewMode === 'daily' && (
+              <motion.div
+                layoutId="active-view-pill"
+                className="absolute inset-0 bg-amber-800 rounded-lg shadow-xs"
+                transition={{ type: 'spring', duration: 0.35, bounce: 0.15 }}
+              />
+            )}
+            <span className="relative z-10 flex items-center gap-1.5">
+              <ListOrdered className="w-3.5 h-3.5" />
+              <span>Daily Cards & Maps</span>
+            </span>
           </button>
 
           <button
             type="button"
             id="tab-master-view"
-            onClick={() => setViewMode('master')}
-            className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
+            onClick={() => {
+              if (viewMode !== 'master') {
+                setViewMode('master');
+                toast('Switched to Master 3-Day Map', {
+                  description: 'Comprehensive 16-stop multi-route overlay across KL, PJ & Ampang',
+                });
+              }
+            }}
+            className={`relative z-10 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-colors duration-150 ${
               viewMode === 'master'
-                ? 'bg-amber-800 text-white shadow-xs'
+                ? 'text-white'
                 : 'text-stone-600 hover:text-stone-900'
             }`}
           >
-            <Compass className="w-3.5 h-3.5" />
-            <span>Master 3-Day Map</span>
+            {viewMode === 'master' && (
+              <motion.div
+                layoutId="active-view-pill"
+                className="absolute inset-0 bg-amber-800 rounded-lg shadow-xs"
+                transition={{ type: 'spring', duration: 0.35, bounce: 0.15 }}
+              />
+            )}
+            <span className="relative z-10 flex items-center gap-1.5">
+              <Compass className="w-3.5 h-3.5" />
+              <span>Master 3-Day Map</span>
+            </span>
           </button>
         </div>
       </header>

@@ -16,7 +16,7 @@ export function MapMarkerPin({
 }: MapMarkerPinProps) {
   return (
     <div
-      className={`relative flex flex-col items-center cursor-pointer select-none transition-transform duration-150 ${
+      className={`relative flex flex-col items-center cursor-pointer select-none transition-transform duration-160 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-95 ${
         isSelected ? 'scale-125 z-50' : 'hover:scale-110 z-20'
       }`}
       style={{

@@ -8,6 +8,7 @@ import {
 import { DayItinerary, Place } from '../types';
 import { MapPolyline } from './MapPolyline';
 import { MapMarkerPin } from './MapMarkerPin';
+import { toast } from 'sonner';
 import {
   RotateCcw,
   Navigation,
@@ -108,6 +109,9 @@ export function MasterMapView({
               onClick={() => {
                 setActiveDayFilter('all');
                 setResetTrigger((p) => p + 1);
+                toast('Showing All 3 Days Route', {
+                  description: 'All 16 stops visible on the master map',
+                });
               }}
               className={`px-3 py-1.5 rounded-md font-medium transition cursor-pointer ${
                 activeDayFilter === 'all'
@@ -124,6 +128,9 @@ export function MasterMapView({
                 onClick={() => {
                   setActiveDayFilter(day.dayNumber);
                   setResetTrigger((p) => p + 1);
+                  toast(`Filtered to Day ${day.dayNumber} Route`, {
+                    description: `${day.title} (${day.places.length} stops)`,
+                  });
                 }}
                 className={`px-3 py-1.5 rounded-md font-medium transition flex items-center gap-1.5 cursor-pointer ${
                   activeDayFilter === day.dayNumber
@@ -145,6 +152,7 @@ export function MasterMapView({
             onClick={() => {
               onSelectPlace(null);
               setResetTrigger((p) => p + 1);
+              toast('Map bounds reset to visible markers', { duration: 1500 });
             }}
             className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs bg-white hover:bg-stone-100 border border-stone-300 text-stone-700 font-medium transition cursor-pointer"
             title="Fit map to all markers"
