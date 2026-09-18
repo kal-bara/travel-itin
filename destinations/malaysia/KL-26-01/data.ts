@@ -21,7 +21,8 @@ export const KL_26_01_DAYS: DayItinerary[] = [
   {
     id: 'day-1',
     dayNumber: 1,
-    title: 'Day 1: North & Central Heritage, Shophouses & Lake Gardens',
+    date: 'Friday, 18 Sept 2026',
+    title: 'North & Central Heritage, Shophouses & Lake Gardens',
     subtitle: 'Bukit Tunku & Chow Kit Core',
     badge: 'Bukit Tunku & Chow Kit',
     color: '#b45309', // amber-700
@@ -34,6 +35,7 @@ export const KL_26_01_DAYS: DayItinerary[] = [
       {
         id: 'd1-p1',
         number: 1,
+        globalNumber: 1,
         name: 'Bukit Tunku Skyline Viewpoints',
         time: '06:45 – 08:00',
         description:
@@ -48,6 +50,7 @@ export const KL_26_01_DAYS: DayItinerary[] = [
       {
         id: 'd1-p2',
         number: 2,
+        globalNumber: 2,
         name: 'Syed Muhammad Naquib al-Attas Library (ISTAC)',
         time: '08:15 – 09:45',
         description:
@@ -63,6 +66,7 @@ export const KL_26_01_DAYS: DayItinerary[] = [
       {
         id: 'd1-p3',
         number: 3,
+        globalNumber: 3,
         name: 'House of Wheat & The Row KL (Chow Kit)',
         time: '10:15 – 12:45',
         description:
@@ -78,6 +82,7 @@ export const KL_26_01_DAYS: DayItinerary[] = [
       {
         id: 'd1-p4',
         number: 4,
+        globalNumber: 4,
         name: 'Bank Negara Malaysia Museum and Art Gallery',
         time: '13:15 – 15:00',
         description:
@@ -93,6 +98,7 @@ export const KL_26_01_DAYS: DayItinerary[] = [
       {
         id: 'd1-p5',
         number: 5,
+        globalNumber: 5,
         name: 'Perdana Botanical Gardens',
         time: '15:30 – 18:00',
         description:
@@ -108,6 +114,7 @@ export const KL_26_01_DAYS: DayItinerary[] = [
       {
         id: 'd1-p6',
         number: 6,
+        globalNumber: 6,
         name: 'Restoran New Kai Seng Seafood',
         time: '18:45 – 20:45',
         description:
@@ -124,7 +131,8 @@ export const KL_26_01_DAYS: DayItinerary[] = [
   {
     id: 'day-2',
     dayNumber: 2,
-    title: 'Day 2: Creative Hubs, Nyonya Kuih, Butter Cake & Sunset KLCC',
+    date: 'Saturday, 19 Sept 2026',
+    title: 'Creative Hubs, Nyonya Kuih, Butter Cake & Sunset KLCC',
     subtitle: 'West Belt & PJ to City Center',
     badge: 'West Belt & PJ to City Center',
     color: '#0d9488', // teal-600
@@ -137,6 +145,7 @@ export const KL_26_01_DAYS: DayItinerary[] = [
       {
         id: 'd2-p1',
         number: 1,
+        globalNumber: 7,
         name: 'Grumpy Bagels',
         time: '08:30 – 10:00',
         description:
@@ -151,6 +160,7 @@ export const KL_26_01_DAYS: DayItinerary[] = [
       {
         id: 'd2-p2',
         number: 2,
+        globalNumber: 8,
         name: 'Kedai KL (Mahsa Avenue)',
         time: '10:30 – 12:45',
         description:
@@ -165,6 +175,7 @@ export const KL_26_01_DAYS: DayItinerary[] = [
       {
         id: 'd2-p3',
         number: 3,
+        globalNumber: 9,
         name: 'Blue Dahlia & Kwong Wah Cendol (Seksyen 17)',
         time: '13:00 – 14:45',
         description:
@@ -180,6 +191,7 @@ export const KL_26_01_DAYS: DayItinerary[] = [
       {
         id: 'd2-p4',
         number: 4,
+        globalNumber: 10,
         name: 'Hideaway Cafe (Taman Yarl)',
         time: '15:15 – 16:45',
         description:
@@ -195,6 +207,7 @@ export const KL_26_01_DAYS: DayItinerary[] = [
       {
         id: 'd2-p5',
         number: 5,
+        globalNumber: 11,
         name: 'KLCC Park & Ficus Elastica Heritage Trees',
         time: '17:30 – 18:45',
         description:
@@ -210,6 +223,7 @@ export const KL_26_01_DAYS: DayItinerary[] = [
       {
         id: 'd2-p6',
         number: 6,
+        globalNumber: 12,
         name: 'Evening Drinks at The Oriental Park KLCC',
         time: '19:00 – 20:45',
         description:
@@ -226,7 +240,8 @@ export const KL_26_01_DAYS: DayItinerary[] = [
   {
     id: 'day-3',
     dayNumber: 3,
-    title: 'Day 3: Morning Wet Market, Adaptive School Hub & Chinatown Heritage',
+    date: 'Sunday, 20 Sept 2026',
+    title: 'Morning Wet Market, Adaptive School Hub & Chinatown Heritage',
     subtitle: 'Ampang East to Chinatown',
     badge: 'Ampang East to Chinatown',
     color: '#6366f1', // indigo-500
@@ -239,6 +254,7 @@ export const KL_26_01_DAYS: DayItinerary[] = [
       {
         id: 'd3-p1',
         number: 1,
+        globalNumber: 13,
         name: 'Pasar Pagi Taman Muda & Kopitiam Breakfast',
         time: '07:30 – 09:30',
         description:
@@ -254,6 +270,7 @@ export const KL_26_01_DAYS: DayItinerary[] = [
       {
         id: 'd3-p2',
         number: 2,
+        globalNumber: 14,
         name: 'The Campus Ampang',
         time: '10:00 – 12:15',
         description:
@@ -269,6 +286,7 @@ export const KL_26_01_DAYS: DayItinerary[] = [
       {
         id: 'd3-p3',
         number: 3,
+        globalNumber: 15,
         name: 'Ho Kow Hainam Kopitiam (Chinatown)',
         time: '12:45 – 14:15',
         description:
@@ -284,6 +302,7 @@ export const KL_26_01_DAYS: DayItinerary[] = [
       {
         id: 'd3-p4',
         number: 4,
+        globalNumber: 16,
         name: 'Kwai Chai Hong (Chinatown Laneway)',
         time: '14:15 – 16:15',
         description:

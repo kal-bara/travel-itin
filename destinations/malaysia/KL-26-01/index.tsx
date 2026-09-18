@@ -1,7 +1,7 @@
 /**
  * Destination: Malaysia / Kuala Lumpur
  * Code: KL-26-01 (Kuala Lumpur, Year 2026, Sequence 01)
- * Final compiled/rendered destination module
+ * Amp Chronicle styled destination module
  */
 
 import { useState } from 'react';
@@ -12,6 +12,7 @@ import { KL_26_01_DESTINATION, KL_26_01_DAYS, KL_26_01_META } from './data';
 import { DayGoogleMap } from '@/src/components/DayGoogleMap';
 import { TimelineItem } from '@/src/components/TimelineItem';
 import { MasterMapView } from '@/src/components/MasterMapView';
+import { FeaturedChronicleBanner } from '@/src/components/FeaturedChronicleBanner';
 import {
   ListOrdered,
   Sparkles,
@@ -22,22 +23,40 @@ import {
   MapPin,
   Calendar,
   Layers,
+  CheckCircle2,
+  AlertCircle,
+  Search,
 } from 'lucide-react';
 
 export { KL_26_01_DESTINATION, KL_26_01_DAYS, KL_26_01_META };
 
-interface DestinationViewProps {
-  initialViewMode?: 'daily' | 'master';
+export interface DestinationViewProps {
+  currentTab?: 'chronicle' | 'day-1' | 'day-2' | 'day-3' | 'master' | 'notes';
+  onSelectTab?: (tab: 'chronicle' | 'day-1' | 'day-2' | 'day-3' | 'master' | 'notes') => void;
+  searchQuery?: string;
+  selectedPlaceId?: string | null;
+  onSelectPlace?: (place: Place | null) => void;
 }
 
 export function KL2601DestinationView({
-  initialViewMode = 'daily',
+  currentTab = 'chronicle',
+  onSelectTab,
+  searchQuery = '',
+  selectedPlaceId: controlledSelectedPlaceId,
+  onSelectPlace: controlledOnSelectPlace,
 }: DestinationViewProps) {
-  const [viewMode, setViewMode] = useState<'daily' | 'master'>(initialViewMode);
-  const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
+  const [internalSelectedPlaceId, setInternalSelectedPlaceId] = useState<string | null>(null);
+  const selectedPlaceId =
+    controlledSelectedPlaceId !== undefined
+      ? controlledSelectedPlaceId
+      : internalSelectedPlaceId;
 
   const handleSelectPlace = (place: Place | null) => {
-    setSelectedPlaceId(place ? place.id : null);
+    if (controlledOnSelectPlace) {
+      controlledOnSelectPlace(place);
+    } else {
+      setInternalSelectedPlaceId(place ? place.id : null);
+    }
     if (place) {
       toast(`Focused on Stop #${place.number}: ${place.name}`, {
         description: `${place.time} • ${place.area}`,
@@ -48,184 +67,134 @@ export function KL2601DestinationView({
 
   const destination = KL_26_01_DESTINATION;
 
+  // Filter days based on tab
+  let daysToRender = destination.days;
+  if (currentTab === 'day-1') {
+    daysToRender = destination.days.filter((d) => d.dayNumber === 1);
+  } else if (currentTab === 'day-2') {
+    daysToRender = destination.days.filter((d) => d.dayNumber === 2);
+  } else if (currentTab === 'day-3') {
+    daysToRender = destination.days.filter((d) => d.dayNumber === 3);
+  }
+
+  // Filter places based on search query
+  const searchTrimmed = searchQuery.trim().toLowerCase();
+  const isSearching = searchTrimmed.length > 0;
+
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-6">
-      {/* Destination Hero / Identity Card */}
-      <header className="text-center py-8 px-4 sm:px-6 bg-linear-to-br from-amber-50/90 via-amber-100/50 to-amber-200/40 rounded-2xl border border-amber-200 shadow-xs">
-        {/* Destination Convention Tag & Badge */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mb-3">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-stone-900 text-amber-300 font-mono text-xs font-bold tracking-wider rounded-full shadow-2xs">
-            <MapPin className="w-3.5 h-3.5 text-amber-400" />
-            <span>{destination.meta.country}/{destination.meta.code}</span>
-          </div>
+    <div className="w-full space-y-6">
+      {/* Featured Banner when on Chronicle Feed */}
+      {currentTab === 'chronicle' && !isSearching && (
+        <FeaturedChronicleBanner
+          totalDays={destination.meta.totalDays}
+          totalStops={destination.meta.totalStops}
+          onExploreDay={() => {
+            const el = document.getElementById('day-card-1');
+            el?.scrollIntoView({ behavior: 'smooth' });
+          }}
+          onOpenMasterMap={() => onSelectTab && onSelectTab('master')}
+        />
+      )}
 
-          <div className="inline-flex items-center gap-1 px-3 py-1 bg-amber-700 text-white text-xs font-bold tracking-wider uppercase rounded-full shadow-2xs">
-            <Sparkles className="w-3 h-3" />
-            <span>{destination.meta.badge}</span>
-          </div>
-        </div>
-
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-amber-950 tracking-tight mb-2">
-          {destination.meta.title}
-        </h1>
-
-        <p className="text-stone-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed mb-5">
-          {destination.meta.description}
-        </p>
-
-        {/* Quick Stats Strip */}
-        <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-medium text-stone-700 mb-5">
-          <span className="flex items-center gap-1 px-2.5 py-1 bg-white/70 rounded-md border border-amber-200/80">
-            <Calendar className="w-3.5 h-3.5 text-amber-700" />
-            <span>{destination.meta.totalDays} Days Structured</span>
-          </span>
-          <span className="flex items-center gap-1 px-2.5 py-1 bg-white/70 rounded-md border border-amber-200/80">
-            <MapPin className="w-3.5 h-3.5 text-amber-700" />
-            <span>{destination.meta.totalStops} Geographic Stops</span>
-          </span>
-          <span className="flex items-center gap-1 px-2.5 py-1 bg-white/70 rounded-md border border-amber-200/80">
-            <Car className="w-3.5 h-3.5 text-amber-700" />
-            <span>Save 1.5–2 hrs / day</span>
-          </span>
-        </div>
-
-        {/* View Mode Switcher with Emil Kowalski spring-animated sliding pill */}
-        <div className="relative inline-flex items-center bg-white/95 p-1 rounded-xl border border-amber-300/80 shadow-xs">
-          <button
-            type="button"
-            id="tab-daily-view"
-            onClick={() => {
-              if (viewMode !== 'daily') {
-                setViewMode('daily');
-                toast('Switched to Daily Cards & Maps', {
-                  description: 'Day-by-day sequential itineraries with embedded Google Maps',
-                });
-              }
-            }}
-            className={`relative z-10 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-colors duration-150 ${
-              viewMode === 'daily'
-                ? 'text-white'
-                : 'text-stone-600 hover:text-stone-900'
-            }`}
-          >
-            {viewMode === 'daily' && (
-              <motion.div
-                layoutId="active-view-pill"
-                className="absolute inset-0 bg-amber-800 rounded-lg shadow-xs"
-                transition={{ type: 'spring', duration: 0.35, bounce: 0.15 }}
-              />
-            )}
-            <span className="relative z-10 flex items-center gap-1.5">
-              <ListOrdered className="w-3.5 h-3.5" />
-              <span>Daily Cards & Maps</span>
-            </span>
-          </button>
-
-          <button
-            type="button"
-            id="tab-master-view"
-            onClick={() => {
-              if (viewMode !== 'master') {
-                setViewMode('master');
-                toast('Switched to Master 3-Day Map', {
-                  description: 'Comprehensive 16-stop multi-route overlay across KL, PJ & Ampang',
-                });
-              }
-            }}
-            className={`relative z-10 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-colors duration-150 ${
-              viewMode === 'master'
-                ? 'text-white'
-                : 'text-stone-600 hover:text-stone-900'
-            }`}
-          >
-            {viewMode === 'master' && (
-              <motion.div
-                layoutId="active-view-pill"
-                className="absolute inset-0 bg-amber-800 rounded-lg shadow-xs"
-                transition={{ type: 'spring', duration: 0.35, bounce: 0.15 }}
-              />
-            )}
-            <span className="relative z-10 flex items-center gap-1.5">
-              <Compass className="w-3.5 h-3.5" />
-              <span>Master 3-Day Map</span>
-            </span>
-          </button>
-        </div>
-      </header>
-
-      {/* Optimization Highlights Alert */}
-      <div className="bg-emerald-50/90 border border-emerald-200 rounded-xl p-4 sm:p-5 text-xs sm:text-sm text-emerald-900 leading-relaxed shadow-xs">
-        <div className="font-bold text-emerald-950 text-sm mb-1.5 flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-emerald-700" />
-          <span>Geographic Route Optimizations:</span>
-        </div>
-        <ol className="list-decimal pl-5 space-y-1 text-emerald-800">
-          <li>
-            <strong>Zero Backtracking:</strong> Replaced the 30 km round-trip backtrack to Hideaway Cafe on Day 1 by seamlessly clustering it with Petaling Jaya on Day 2.
-          </li>
-          <li>
-            <strong>Logical Pairing:</strong> Linked Bank Negara Museum directly to Perdana Botanical Gardens (just 5 mins away).
-          </li>
-          <li>
-            <strong>Timing Safe:</strong> Rescheduled Chinatown's Ho Kow Kopitiam to lunch (12:45 PM) so you never risk arriving after their 2:30 PM afternoon closure.
-          </li>
-        </ol>
-      </div>
-
-      {/* Render View Mode */}
-      {viewMode === 'master' ? (
+      {/* When on Master Map tab, show MasterMapView directly */}
+      {currentTab === 'master' ? (
         <MasterMapView
           days={destination.days}
           selectedPlaceId={selectedPlaceId}
           onSelectPlace={handleSelectPlace}
         />
       ) : (
-        /* Daily Cards View with Embedded Interactive Google Maps */
-        <div className="space-y-8">
-          {destination.days.map((day) => (
-            <section
-              key={day.id}
-              id={`day-card-${day.dayNumber}`}
-              className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
-            >
-              {/* Day Header */}
-              <div className="bg-stone-50/80 px-4 sm:px-6 py-4 border-b border-gray-200 flex flex-wrap items-center justify-between gap-2.5">
-                <div>
-                  <h2 className="text-base sm:text-lg font-bold text-stone-900">
-                    {day.title}
-                  </h2>
-                  <p className="text-xs text-stone-500 mt-0.5">
-                    {day.places.length} curated stops in geographic sequence
-                  </p>
+        /* Daily Itinerary Cards in Amp Chronicle styling */
+        <div className="space-y-6">
+          {/* Status line / Section indicator */}
+          <div className="flex items-center justify-between px-1 text-xs font-mono text-[#607065] dark:text-[#88968d] uppercase tracking-wider">
+            <div className="flex items-center gap-2">
+              <span className="text-[#18201a] dark:text-[#dfdfc1] font-bold">
+                {isSearching
+                  ? `Search Results for "${searchQuery}"`
+                  : currentTab === 'chronicle'
+                  ? 'All 3 Daily Circuits // Sequential Stream'
+                  : `Circuit: Day ${daysToRender[0]?.dayNumber} // ${daysToRender[0]?.badge}`}
+              </span>
+            </div>
+
+            <span className="text-[11px] text-[#607065] dark:text-[#88968d]">
+              {daysToRender.reduce((acc, d) => acc + d.places.length, 0)} Stops Total
+            </span>
+          </div>
+
+          {/* Render Days */}
+          {daysToRender.map((day) => {
+            // If searching, filter places
+            const matchingPlaces = isSearching
+              ? day.places.filter(
+                  (p) =>
+                    p.name.toLowerCase().includes(searchTrimmed) ||
+                    p.description.toLowerCase().includes(searchTrimmed) ||
+                    p.area.toLowerCase().includes(searchTrimmed) ||
+                    p.tags.some((t) => t.text.toLowerCase().includes(searchTrimmed))
+                )
+              : day.places;
+
+            if (isSearching && matchingPlaces.length === 0) {
+              return null;
+            }
+
+            return (
+              <section
+                key={day.id}
+                id={`day-card-${day.dayNumber}`}
+                className="bg-white dark:bg-[#0e1411] rounded-sm border border-[#e0e5dd] dark:border-[#223027] overflow-hidden shadow-xs transition-colors"
+              >
+                {/* Day Header */}
+                <div className="bg-[#edf2ea] dark:bg-[#121815] px-4 sm:px-6 py-3.5 border-b border-[#e0e5dd] dark:border-[#223027] flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex items-baseline gap-2.5">
+                    <span className="font-mono text-xs font-bold text-[#f6833b] uppercase tracking-wider">
+                      Day {String(day.dayNumber).padStart(2, '0')} //
+                    </span>
+                    <h2 className="font-serif text-base sm:text-lg font-medium text-[#0b0f0c] dark:text-[#f5f6ed]">
+                      {day.title}
+                    </h2>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    {day.date && (
+                      <span className="text-[11px] font-mono text-[#607065] dark:text-[#88968d] hidden sm:inline">
+                        {day.date} ·
+                      </span>
+                    )}
+                    <span
+                      className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-xs"
+                      style={{
+                        backgroundColor: '#1b2520',
+                        color: day.color,
+                        border: `1px solid ${day.color}40`,
+                      }}
+                    >
+                      {day.badge}
+                    </span>
+
+                    <span className="text-[11px] font-mono text-[#607065] dark:text-[#88968d]">
+                      {matchingPlaces.length} Stops
+                    </span>
+                  </div>
                 </div>
 
-                <span
-                  className="text-xs font-semibold px-2.5 py-1 rounded-md"
-                  style={{
-                    backgroundColor: `${day.color}15`,
-                    color: day.color,
-                    border: `1px solid ${day.color}30`,
-                  }}
-                >
-                  {day.badge}
-                </span>
-              </div>
+                {/* Real Interactive Google Map */}
+                <div className="p-3 sm:p-5 pb-2">
+                  <DayGoogleMap
+                    day={day}
+                    selectedPlaceId={selectedPlaceId}
+                    onSelectPlace={handleSelectPlace}
+                  />
+                </div>
 
-              {/* Real Interactive Google Map */}
-              <div className="p-4 sm:p-5 pb-2">
-                <DayGoogleMap
-                  day={day}
-                  selectedPlaceId={selectedPlaceId}
-                  onSelectPlace={handleSelectPlace}
-                />
-              </div>
-
-              {/* Interactive Timeline */}
-              <div className="p-4 sm:p-6 pt-2">
-                <div className="space-y-1.5 divide-y divide-gray-100">
-                  {day.places.map((place, index) => (
-                    <div key={place.id} className="pt-2 first:pt-0">
+                {/* Sequential Timeline Items */}
+                <div className="p-3 sm:p-5 pt-2">
+                  <div className="space-y-2">
+                    {matchingPlaces.map((place, index) => (
                       <TimelineItem
+                        key={place.id}
                         place={place}
                         color={day.color}
                         isSelected={selectedPlaceId === place.id}
@@ -234,58 +203,64 @@ export function KL2601DestinationView({
                             selectedPlaceId === place.id ? null : place
                           )
                         }
-                        isLast={index === day.places.length - 1}
+                        isLast={index === matchingPlaces.length - 1}
                       />
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
+              </section>
+            );
+          })}
+
+          {/* Route Optimization Highlights Box (Amp Chronicle callout) */}
+          <div className="rounded-sm border border-[#e0e5dd] dark:border-[#223027] bg-[#f6f9f4] dark:bg-[#121815] p-4 sm:p-5 space-y-2.5 transition-colors">
+            <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-[#2d7745] dark:text-[#78d197]">
+              <Sparkles className="w-4 h-4 text-[#2d7745] dark:text-[#78d197]" />
+              <span>Zero-Backtracking Route Architecture</span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2 text-xs">
+              <div className="p-3 rounded-xs bg-white dark:bg-[#0b0d0b] border border-[#e0e5dd] dark:border-[#223027] space-y-1 shadow-2xs">
+                <span className="font-mono text-[#f6833b] font-bold block text-[11px] uppercase">
+                  01. Geographic Clustering
+                </span>
+                <p className="text-[#607065] dark:text-[#88968d] text-[11px] leading-relaxed">
+                  Eliminated the 30 km Federal Highway detour by clustering Petaling Jaya into Day 2.
+                </p>
               </div>
-            </section>
-          ))}
+
+              <div className="p-3 rounded-xs bg-white dark:bg-[#0b0d0b] border border-[#e0e5dd] dark:border-[#223027] space-y-1 shadow-2xs">
+                <span className="font-mono text-[#2d7745] dark:text-[#78d197] font-bold block text-[11px] uppercase">
+                  02. 5-Min Distance Pairs
+                </span>
+                <p className="text-[#607065] dark:text-[#88968d] text-[11px] leading-relaxed">
+                  Sasana Kijang Art Gallery sits directly uphill from Perdana Botanical Gardens.
+                </p>
+              </div>
+
+              <div className="p-3 rounded-xs bg-white dark:bg-[#0b0d0b] border border-[#e0e5dd] dark:border-[#223027] space-y-1 shadow-2xs">
+                <span className="font-mono text-[#2b6cb0] dark:text-[#78b3e8] font-bold block text-[11px] uppercase">
+                  03. Time Lock Protected
+                </span>
+                <p className="text-[#607065] dark:text-[#88968d] text-[11px] leading-relaxed">
+                  Ho Kow Kopitiam locked to 12:45 PM to ensure arrival before strict 2:30 PM closure.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
-      {/* Practical Travel Insights */}
-      <div className="bg-stone-50 border border-dashed border-stone-300 rounded-xl p-5 sm:p-6 text-xs sm:text-sm">
-        <h3 className="font-bold text-stone-800 text-sm mb-2.5 flex items-center gap-2">
-          <Compass className="w-4 h-4 text-amber-700" />
-          <span>Why this route works better in real life</span>
-        </h3>
-        <ul className="space-y-2 text-stone-600 pl-1">
-          <li className="flex items-start gap-2">
-            <Car className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
-            <span>
-              <strong>Total Transit Saved:</strong> Eliminates roughly 50+ km of redundant zig-zag driving across Kuala Lumpur and Petaling Jaya.
-            </span>
-          </li>
-          <li className="flex items-start gap-2">
-            <Clock className="w-4 h-4 text-blue-700 shrink-0 mt-0.5" />
-            <span>
-              <strong>Traffic Alignment:</strong> Avoids driving inbound across major highways (Federal/Sprint) during the 5:00 PM evening peak.
-            </span>
-          </li>
-          <li className="flex items-start gap-2">
-            <Navigation className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
-            <span>
-              <strong>Operating Hours Safe:</strong> Guarantees you reach traditional eateries before afternoon closing times.
-            </span>
-          </li>
-        </ul>
-      </div>
-
       {/* Destination Metadata Footer */}
-      <footer className="text-center text-xs text-stone-500 py-6 border-t border-stone-200/80 space-y-1">
-        <div className="flex items-center justify-center gap-2 text-stone-600 font-mono text-[11px]">
-          <span>Destination Code:</span>
-          <span className="font-bold bg-stone-100 px-1.5 py-0.5 rounded border border-stone-300">
+      <footer className="text-center font-mono text-xs text-[#607065] dark:text-[#88968d] py-8 border-t border-[#e0e5dd] dark:border-[#223027] space-y-2 transition-colors">
+        <div className="flex items-center justify-center gap-2 text-[#18201a] dark:text-[#dfdfc1]">
+          <span className="text-[#607065] dark:text-[#88968d]">DESTINATION IDENTIFIER:</span>
+          <span className="font-bold bg-[#edf2ea] dark:bg-[#1c2520] px-2 py-0.5 rounded-xs border border-[#d6ded4] dark:border-[#2e3e34]">
             {destination.meta.country}/{destination.meta.code}
           </span>
         </div>
-        <p>
-          Optimized Geographic Itinerary • Adapted from Riri Travels: <em>A Different Side of KL</em>
-        </p>
-        <p className="text-stone-400 text-[11px]">
-          Powered by Google Maps Platform (Maps JavaScript API & Advanced Markers)
+        <p className="text-[11px] text-[#607065] dark:text-[#88968d]">
+          Amp Chronicle Edition • Zero-Backtracking Kuala Lumpur Circuit • 16 Curated Waypoints
         </p>
       </footer>
     </div>

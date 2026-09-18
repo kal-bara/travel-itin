@@ -1,10 +1,89 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant light (&:where(.light, .light *));
+
+@theme {
+  --font-serif: "Newsreader", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
 :root {
+  /* Amp Code Theme Colors (Dark Default, Supports Light) */
+  --amp-shell-dark: #0b0d0b;
+  --amp-surface-dark: #111714;
+  --amp-card-dark: #1a241f;
+  --amp-card-subtle-dark: #131a16;
+  --amp-border-dark: #223027;
+  --amp-border-faint-dark: #17221b;
+  --amp-text-dark: #dfdfc1;
+  --amp-text-bright-dark: #f5f6ed;
+  --amp-muted-dark: #7d8b81;
+  --amp-yolk: #f6833b;
+
+  --amp-shell-light: #fafaf8;
+  --amp-surface-light: #ffffff;
+  --amp-card-light: #f3f6f0;
+  --amp-card-subtle-light: #f8faf6;
+  --amp-border-light: #e0e5dd;
+  --amp-border-faint-light: #ecf0e9;
+  --amp-text-light: #18201a;
+  --amp-text-bright-light: #0b0f0c;
+  --amp-muted-light: #607065;
+
   /* Emil Kowalski's signature strong easing curves */
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Base styles matching Amp Chronicle */
+body {
+  font-family: var(--font-sans);
+  background-color: var(--amp-shell-light);
+  color: var(--amp-text-light);
+  letter-spacing: -0.01em;
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+/* Dark mode default / override */
+.dark body,
+html.dark body,
+[data-theme="dark"] {
+  background-color: var(--amp-shell-dark);
+  color: var(--amp-text-dark);
+}
+
+/* Subtle engineering background grid lines */
+.amp-grid-bg {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(34, 48, 39, 0.4) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(34, 48, 39, 0.4) 1px, transparent 1px);
+}
+
+.light .amp-grid-bg,
+[data-theme="light"] .amp-grid-bg {
+  background-image: 
+    linear-gradient(to right, rgba(224, 229, 221, 0.8) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(224, 229, 221, 0.8) 1px, transparent 1px);
+}
+
+/* Custom sleek scrollbars matching ampcode.com */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(125, 139, 129, 0.25);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(125, 139, 129, 0.45);
 }
 
 /* Tactile press feedback from emil-design-eng: scale(0.97) on active with custom ease-out */

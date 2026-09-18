@@ -6,6 +6,7 @@ export interface PlaceTag {
 export interface Place {
   id: string;
   number: number;
+  globalNumber?: number;
   name: string;
   time: string;
   description: string;
@@ -20,6 +21,7 @@ export interface Place {
 export interface DayItinerary {
   id: string;
   dayNumber: number;
+  date?: string;
   title: string;
   subtitle: string;
   badge: string;

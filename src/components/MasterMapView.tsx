@@ -84,26 +84,26 @@ export function MasterMapView({
     : null;
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden mb-8">
+    <div className="bg-white dark:bg-[#0c100d] rounded-sm border border-[#e0e5dd] dark:border-[#223027] shadow-sm overflow-hidden mb-8 transition-colors">
       {/* Control Header */}
-      <div className="p-4 sm:p-5 bg-stone-50/80 border-b border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="p-4 sm:p-5 bg-[#edf2ea] dark:bg-[#121815] border-b border-[#e0e5dd] dark:border-[#223027] flex flex-col md:flex-row md:items-center justify-between gap-4 font-mono">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-lg bg-amber-100 text-amber-900">
+            <span className="p-1 rounded-xs bg-[#e0e8dd] dark:bg-[#1a241f] text-[#f6833b] border border-[#d2ddd0] dark:border-[#2e3e34]">
               <Layers className="w-4 h-4" />
             </span>
-            <h2 className="text-lg font-bold text-stone-900">
-              Master Geographic Flow Map
+            <h2 className="text-base sm:text-lg font-bold font-serif text-[#0b0f0c] dark:text-[#f5f6ed]">
+              Master Circuit Overview // 16 Stops
             </h2>
           </div>
-          <p className="text-xs text-stone-600 mt-1">
-            Compare all 3 daily routes across Kuala Lumpur, Petaling Jaya, and Ampang.
+          <p className="text-xs text-[#607065] dark:text-[#88968d] mt-1 font-mono">
+            3 Daily Geographic Clusters: Bukit Tunku & Chow Kit • Petaling Jaya • Chinatown & Ampang
           </p>
         </div>
 
         {/* Filters and Actions */}
         <div className="flex flex-wrap items-center gap-2">
-          <div className="flex items-center bg-stone-200/70 p-0.5 rounded-lg text-xs">
+          <div className="flex items-center bg-[#e4eae0] dark:bg-[#0b0d0b] p-0.5 rounded-xs text-xs font-mono border border-[#d2ddd0] dark:border-[#223027]">
             <button
               type="button"
               onClick={() => {
@@ -113,10 +113,10 @@ export function MasterMapView({
                   description: 'All 16 stops visible on the master map',
                 });
               }}
-              className={`px-3 py-1.5 rounded-md font-medium transition cursor-pointer ${
+              className={`px-2.5 py-1 rounded-xs uppercase tracking-wider transition cursor-pointer ${
                 activeDayFilter === 'all'
-                  ? 'bg-white text-stone-900 shadow-2xs font-bold'
-                  : 'text-stone-600 hover:text-stone-900'
+                  ? 'bg-white dark:bg-[#1c2520] text-[#f6833b] font-bold border border-[#d2ddd0] dark:border-[#2e3e34] shadow-2xs'
+                  : 'text-[#607065] dark:text-[#88968d] hover:text-[#18201a] dark:hover:text-[#dfdfc1]'
               }`}
             >
               All 3 Days ({days.reduce((acc, d) => acc + d.places.length, 0)})
@@ -132,14 +132,14 @@ export function MasterMapView({
                     description: `${day.title} (${day.places.length} stops)`,
                   });
                 }}
-                className={`px-3 py-1.5 rounded-md font-medium transition flex items-center gap-1.5 cursor-pointer ${
+                className={`px-2 py-1 rounded-xs uppercase tracking-wider transition flex items-center gap-1.5 cursor-pointer ${
                   activeDayFilter === day.dayNumber
-                    ? 'bg-white text-stone-900 shadow-2xs font-bold'
-                    : 'text-stone-600 hover:text-stone-900'
+                    ? 'bg-white dark:bg-[#1c2520] text-[#f6833b] font-bold border border-[#d2ddd0] dark:border-[#2e3e34] shadow-2xs'
+                    : 'text-[#607065] dark:text-[#88968d] hover:text-[#18201a] dark:hover:text-[#dfdfc1]'
                 }`}
               >
                 <span
-                  className="w-2 h-2 rounded-full"
+                  className="w-2 h-2 rounded-xs"
                   style={{ backgroundColor: day.color }}
                 />
                 <span>Day {day.dayNumber}</span>
@@ -154,10 +154,10 @@ export function MasterMapView({
               setResetTrigger((p) => p + 1);
               toast('Map bounds reset to visible markers', { duration: 1500 });
             }}
-            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs bg-white hover:bg-stone-100 border border-stone-300 text-stone-700 font-medium transition cursor-pointer"
+            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xs text-xs font-mono bg-[#edf2ea] dark:bg-[#1a241f] hover:bg-[#e0e8dd] dark:hover:bg-[#223027] border border-[#d2ddd0] dark:border-[#2e3e34] text-[#18201a] dark:text-[#dfdfc1] transition cursor-pointer"
             title="Fit map to all markers"
           >
-            <RotateCcw className="w-3.5 h-3.5" />
+            <RotateCcw className="w-3 h-3 text-[#f6833b]" />
             <span className="hidden sm:inline">Fit Bounds</span>
           </button>
         </div>
@@ -200,12 +200,20 @@ export function MasterMapView({
                   <AdvancedMarker
                     key={place.id}
                     position={place.coordinates}
-                    title={`Day ${day.dayNumber} Stop ${place.number}: ${place.name}`}
+                    title={
+                      activeDayFilter === 'all'
+                        ? `Stop #${place.globalNumber || place.number} (Day ${day.dayNumber} Stop #${place.number}): ${place.name}`
+                        : `Day ${day.dayNumber} Stop #${place.number}: ${place.name}`
+                    }
                     onClick={() => onSelectPlace(place)}
                     zIndex={isSelected ? 60 : 10 + place.number}
                   >
                     <MapMarkerPin
-                      number={place.number}
+                      number={
+                        activeDayFilter === 'all'
+                          ? place.globalNumber || place.number
+                          : place.number
+                      }
                       color={day.color}
                       isSelected={isSelected}
                     />
@@ -223,12 +231,13 @@ export function MasterMapView({
                 maxWidth={300}
               >
                 <div className="p-1 font-sans text-stone-800">
-                  <div className="flex items-center gap-1.5 mb-1">
+                  <div className="flex items-center gap-1.5 mb-1 font-mono">
                     <span
                       className="px-1.5 py-0.5 rounded text-[10px] font-bold text-white"
                       style={{ backgroundColor: selectedPlaceDay.color }}
                     >
                       Day {selectedPlaceDay.dayNumber} • #{selectedPlace.number}
+                      {selectedPlace.globalNumber ? ` (${selectedPlace.globalNumber}/16)` : ''}
                     </span>
                     <span className="text-xs font-semibold text-stone-500">
                       {selectedPlace.area}
@@ -284,20 +293,20 @@ export function MasterMapView({
         </div>
 
         {/* Places Scrollable List */}
-        <div className="lg:col-span-4 h-[240px] lg:h-full overflow-y-auto border-t lg:border-t-0 lg:border-l border-gray-200 bg-stone-50/50 divide-y divide-gray-100">
-          <div className="p-3 bg-stone-100/70 sticky top-0 z-10 text-xs font-bold text-stone-600 uppercase tracking-wider flex items-center justify-between">
-            <span>Stops in Current View ({allDisplayedPlaces.length})</span>
-            <span className="text-[11px] font-normal normal-case text-stone-500">
-              Click stop to focus map
+        <div className="lg:col-span-4 h-[240px] lg:h-full overflow-y-auto border-t lg:border-t-0 lg:border-l border-[#e0e5dd] dark:border-[#223027] bg-[#fbfdf9] dark:bg-[#0c100d] divide-y divide-[#ecf0e9] dark:divide-[#1b251f]">
+          <div className="p-3 bg-[#edf2ea] dark:bg-[#121815] sticky top-0 z-10 text-xs font-mono text-[#607065] dark:text-[#88968d] uppercase tracking-wider flex items-center justify-between border-b border-[#e0e5dd] dark:border-[#223027]">
+            <span className="text-[#18201a] dark:text-[#dfdfc1] font-bold">Stops ({allDisplayedPlaces.length})</span>
+            <span className="text-[10px] lowercase text-[#607065] dark:text-[#88968d]">
+              click to focus pin
             </span>
           </div>
 
           {displayedDays.map((day) => (
             <div key={day.id} className="p-3">
-              <div className="flex items-center justify-between mb-2">
-                <span className="flex items-center gap-1.5 text-xs font-bold text-stone-800">
+              <div className="flex items-center justify-between mb-2 font-mono">
+                <span className="flex items-center gap-1.5 text-xs font-bold text-[#18201a] dark:text-[#dfdfc1]">
                   <span
-                    className="w-2.5 h-2.5 rounded-full"
+                    className="w-2 h-2 rounded-xs"
                     style={{ backgroundColor: day.color }}
                   />
                   Day {day.dayNumber}: {day.badge}
@@ -306,7 +315,7 @@ export function MasterMapView({
                   href={day.googleMapsDirectionsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[11px] text-blue-600 hover:underline flex items-center gap-0.5"
+                  className="text-[11px] text-[#f6833b] hover:underline flex items-center gap-0.5 font-bold"
                   title="Open full day route in Google Maps"
                 >
                   <Navigation className="w-3 h-3" />
@@ -322,23 +331,30 @@ export function MasterMapView({
                       key={place.id}
                       type="button"
                       onClick={() => onSelectPlace(place)}
-                      className={`w-full text-left p-2 rounded-lg text-xs transition cursor-pointer flex items-start gap-2 border ${
+                      className={`w-full text-left p-2 rounded-xs text-xs font-mono transition cursor-pointer flex items-start gap-2 border ${
                         isSelected
-                          ? 'bg-amber-50 border-amber-300 text-stone-900 shadow-2xs'
-                          : 'bg-white hover:bg-stone-100/80 border-stone-200/80 text-stone-700'
+                          ? 'bg-[#eaf1e7] dark:bg-[#1c2520] border-[#f6833b] text-[#18201a] dark:text-[#f5f6ed] shadow-xs'
+                          : 'bg-white dark:bg-[#121815]/60 hover:bg-[#edf2ea] dark:hover:bg-[#18241e] border-[#e0e5dd] dark:border-[#223027] text-[#607065] dark:text-[#88968d] hover:text-[#18201a] dark:hover:text-[#dfdfc1]'
                       }`}
                     >
                       <span
-                        className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0 mt-0.5"
-                        style={{ backgroundColor: day.color }}
+                        className="w-5 h-5 rounded-xs flex items-center justify-center text-[10px] font-bold text-white shrink-0 mt-0.5"
+                        style={{ backgroundColor: isSelected ? '#f6833b' : day.color }}
                       >
-                        {place.number}
+                        {activeDayFilter === 'all'
+                          ? place.globalNumber || place.number
+                          : place.number}
                       </span>
                       <div className="min-w-0 flex-1">
-                        <div className="font-semibold truncate text-stone-900">
+                        <div className="font-medium truncate text-[#18201a] dark:text-[#f5f6ed]">
+                          {activeDayFilter === 'all' && (
+                            <span className="opacity-60 text-[10px] mr-1">
+                              #{place.number}
+                            </span>
+                          )}
                           {place.name}
                         </div>
-                        <div className="text-[10px] text-stone-500 flex items-center gap-1 mt-0.5">
+                        <div className="text-[10px] text-[#607065] dark:text-[#88968d] flex items-center gap-1 mt-0.5 font-mono">
                           <span>{place.time}</span>
                           <span>•</span>
                           <span>{place.area}</span>
