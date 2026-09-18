@@ -68,15 +68,15 @@ export function DayGoogleMap({
   const polylinePath = day.places.map((p) => p.coordinates);
 
   return (
-    <div className="relative w-full rounded-sm overflow-hidden border border-[#223027] dark:border-[#223027] light:border-[#e0e5dd] shadow-sm bg-[#0c100d] dark:bg-[#0c100d] light:bg-[#f6f9f4]">
+    <div className="relative w-full rounded-sm overflow-hidden border border-[#e0e5dd] dark:border-[#223027] shadow-sm bg-[#f6f9f4] dark:bg-[#0c100d]">
       {/* Top Map Toolbar in Amp Chronicle style */}
-      <div className="flex items-center justify-between px-3 sm:px-4 py-2 bg-[#121815] dark:bg-[#121815] light:bg-[#edf2ea] border-b border-[#223027] dark:border-[#223027] light:border-[#e0e5dd] text-xs font-mono text-[#88968d] dark:text-[#88968d] light:text-[#607065]">
+      <div className="flex items-center justify-between px-3 sm:px-4 py-2 bg-[#edf2ea] dark:bg-[#121815] border-b border-[#e0e5dd] dark:border-[#223027] text-xs font-mono text-[#607065] dark:text-[#88968d]">
         <div className="flex items-center gap-2">
           <span
             className="w-2 h-2 rounded-xs"
             style={{ backgroundColor: day.color }}
           />
-          <span className="uppercase tracking-wider text-[#dfdfc1] dark:text-[#dfdfc1] light:text-[#18201a] font-medium text-[11px] sm:text-xs">
+          <span className="uppercase tracking-wider text-[#18201a] dark:text-[#dfdfc1] font-medium text-[11px] sm:text-xs">
             Map View // {day.places.length} Stops
           </span>
         </div>
@@ -90,7 +90,7 @@ export function DayGoogleMap({
               setResetTrigger((prev) => prev + 1);
               toast('Map centered to full route', { duration: 1500 });
             }}
-            className="inline-flex items-center gap-1.5 px-2 py-1 rounded-xs text-[#dfdfc1] dark:text-[#dfdfc1] light:text-[#18201a] bg-[#1a241f] dark:bg-[#1a241f] light:bg-[#ffffff] hover:bg-[#223027] border border-[#2e3e34] dark:border-[#2e3e34] light:border-[#d6ded4] text-[11px] font-mono cursor-pointer transition-colors"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xs text-[#18201a] dark:text-[#dfdfc1] bg-white dark:bg-[#1a241f] hover:bg-[#e4eae0] dark:hover:bg-[#223027] border border-[#d6ded4] dark:border-[#2e3e34] text-[11px] font-mono cursor-pointer transition-colors shadow-2xs"
             title="Reset zoom to show all stops"
           >
             <RotateCcw className="w-3 h-3 text-[#f6833b]" />
@@ -244,8 +244,8 @@ export function DayGoogleMap({
       </div>
 
       {/* Stop quick chips underneath map */}
-      <div className="px-3 py-2 bg-[#121815] dark:bg-[#121815] light:bg-[#edf2ea] border-t border-[#223027] dark:border-[#223027] light:border-[#e0e5dd] overflow-x-auto flex items-center gap-1.5 text-xs font-mono">
-        <span className="text-[10px] uppercase tracking-wider text-[#88968d] whitespace-nowrap mr-1 flex items-center gap-1">
+      <div className="px-3 py-2 bg-[#edf2ea] dark:bg-[#121815] border-t border-[#e0e5dd] dark:border-[#223027] overflow-x-auto flex items-center gap-1.5 text-xs font-mono">
+        <span className="text-[10px] uppercase tracking-wider text-[#607065] dark:text-[#88968d] whitespace-nowrap mr-1 flex items-center gap-1">
           <Sparkles className="w-3 h-3 text-[#f6833b]" />
           Jump:
         </span>
@@ -258,12 +258,12 @@ export function DayGoogleMap({
               onClick={() => onSelectPlace(isSelected ? null : place)}
               className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-xs text-[11px] whitespace-nowrap transition cursor-pointer border ${
                 isSelected
-                  ? 'bg-[#f6833b] text-[#0b0d0b] border-[#f6833b] font-bold'
-                  : 'bg-[#1a241f] dark:bg-[#1a241f] light:bg-[#ffffff] hover:bg-[#223027] text-[#dfdfc1] dark:text-[#dfdfc1] light:text-[#18201a] border-[#2e3e34] dark:border-[#2e3e34] light:border-[#d6ded4]'
+                  ? 'bg-[#f6833b] text-[#0b0d0b] border-[#f6833b] font-bold shadow-2xs'
+                  : 'bg-white dark:bg-[#1a241f] hover:bg-[#e4eae0] dark:hover:bg-[#223027] text-[#18201a] dark:text-[#dfdfc1] border-[#d6ded4] dark:border-[#2e3e34] shadow-2xs'
               }`}
             >
               <span
-                className="w-3.5 h-3.5 rounded-xs flex items-center justify-center text-[9px] font-bold"
+                className="w-3.5 h-3.5 rounded-xs flex items-center justify-center text-[9px] font-bold shrink-0"
                 style={{
                   backgroundColor: isSelected ? '#0b0d0b' : day.color,
                   color: isSelected ? '#f6833b' : '#ffffff',

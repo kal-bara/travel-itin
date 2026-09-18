@@ -65,10 +65,13 @@ export function AmpChronicleHeader({
             }}
             className="flex items-center gap-2.5 text-[#0b0f0c] dark:text-[#f5f6ed] hover:opacity-90 transition-opacity"
           >
-            {/* Geometric Amp-styled mark */}
-            <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-sm bg-[#18201a] dark:bg-[#1c2520] border border-[#d6ded4] dark:border-[#2e3e34] flex items-center justify-center text-[#dfdfc1] font-mono font-bold text-xs shadow-2xs">
-              <span className="text-[#f6833b]">⚡</span>
-            </div>
+            {/* Chronicle Universal Itinerary Wayfinder & Circuit Emblem */}
+            <img
+              src="/favicon.svg?v=2"
+              alt="Travel Chronicle Wayfinder"
+              className="w-6 h-6 sm:w-7 sm:h-7 rounded-sm shadow-2xs border border-[#d6ded4] dark:border-[#2e3e34] object-contain shrink-0"
+              referrerPolicy="no-referrer"
+            />
 
             <div className="flex items-baseline gap-1.5 font-mono">
               <span className="font-bold tracking-tight text-sm sm:text-base uppercase text-[#18201a] dark:text-[#f5f6ed]">

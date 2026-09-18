@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <!-- Subtle gradient for the orbital circuit route -->
+    <linearGradient id="routeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f6833b" />
+      <stop offset="50%" stop-color="#78d197" />
+      <stop offset="100%" stop-color="#2d7745" />
+    </linearGradient>
+  </defs>
+
+  <!-- Archival Slate Tile -->
+  <rect width="64" height="64" rx="14" fill="#121815" />
+  <rect width="62" height="62" x="1" y="1" rx="13" fill="none" stroke="#25352c" stroke-width="1.5" />
+
+  <!-- Subtle Coordinate Latitude Crosshairs -->
+  <line x1="32" y1="9" x2="32" y2="55" stroke="#1f2c25" stroke-width="1" stroke-dasharray="2 3" />
+  <line x1="9" y1="32" x2="55" y2="32" stroke="#1f2c25" stroke-width="1" stroke-dasharray="2 3" />
+  <circle cx="32" cy="32" r="23" fill="none" stroke="#1a251e" stroke-width="1" stroke-dasharray="3 3" />
+
+  <!-- Universal Circuit Route Path (Multi-stop loop) -->
+  <path d="M19 44 C 11 31, 20 15, 36 15 C 49 15, 53 30, 45 44 C 38 53, 25 52, 19 44 Z" 
+        fill="none" 
+        stroke="#1a261f" 
+        stroke-width="5" 
+        stroke-linejoin="round" />
+  <path d="M19 44 C 11 31, 20 15, 36 15 C 49 15, 53 30, 45 44 C 38 53, 25 52, 19 44 Z" 
+        fill="none" 
+        stroke="url(#routeGrad)" 
+        stroke-width="2" 
+        stroke-linecap="round" />
+
+  <!-- Journey Stage Waypoints (Universal Itinerary Stops) -->
+  <!-- Stop 1 (Active Waypoint) -->
+  <circle cx="19" cy="44" r="4.5" fill="#121815" stroke="#f6833b" stroke-width="2" />
+  <circle cx="19" cy="44" r="2" fill="#f6833b" />
+
+  <!-- Stop 2 -->
+  <circle cx="36" cy="15" r="3.5" fill="#121815" stroke="#78d197" stroke-width="1.5" />
+  <circle cx="36" cy="15" r="1.5" fill="#78d197" />
+
+  <!-- Stop 3 -->
+  <circle cx="45" cy="44" r="3.5" fill="#121815" stroke="#2d7745" stroke-width="1.5" />
+  <circle cx="45" cy="44" r="1.5" fill="#2d7745" />
+
+  <!-- Central Wayfinder / Precision Compass Rose -->
+  <g transform="translate(32, 32)">
+    <!-- Secondary diagonal ticks -->
+    <polygon points="0,-11 2,-3 11,0 2,3 0,11 -2,3 -11,0 -2,-3" fill="#1e2c24" />
+    
+    <!-- Primary Cardinal Needle Star -->
+    <!-- North / South / East / West -->
+    <polygon points="0,-15 2.5,-3.5 15,0 2.5,3.5 0,15 -2.5,3.5 -15,0 -2.5,-3.5" fill="#f6833b" />
+    <!-- Dimensional shadow facets -->
+    <polygon points="0,-15 0,0 15,0 0,0 0,15 0,0 -15,0 0,0" fill="#d96317" opacity="0.4" />
+    
+    <!-- Core Pin Center -->
+    <circle cx="0" cy="0" r="3" fill="#ffffff" />
+    <circle cx="0" cy="0" r="1.5" fill="#121815" />
+  </g>
+</svg>

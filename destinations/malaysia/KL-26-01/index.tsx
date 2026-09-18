@@ -164,12 +164,13 @@ export function KL2601DestinationView({
                       </span>
                     )}
                     <span
-                      className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-xs"
-                      style={{
-                        backgroundColor: '#1b2520',
-                        color: day.color,
-                        border: `1px solid ${day.color}40`,
-                      }}
+                      className={`text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-xs font-semibold border ${
+                        day.dayNumber === 1
+                          ? 'bg-[#fef3c7] dark:bg-[#241c14] text-[#92400e] dark:text-[#fbbf24] border-[#fde68a] dark:border-[#78350f]/60'
+                          : day.dayNumber === 2
+                          ? 'bg-[#ccfbf1] dark:bg-[#102421] text-[#0f766e] dark:text-[#5eead4] border-[#99f6e4] dark:border-[#0f766e]/60'
+                          : 'bg-[#e0e7ff] dark:bg-[#1e1e36] text-[#4338ca] dark:text-[#a5b4fc] border-[#c7d2fe] dark:border-[#4338ca]/60'
+                      }`}
                     >
                       {day.badge}
                     </span>
