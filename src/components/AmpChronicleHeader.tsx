@@ -15,12 +15,13 @@ import {
   SlidersHorizontal,
   X,
   Menu,
+  Camera,
 } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface AmpChronicleHeaderProps {
-  currentTab: 'chronicle' | 'day-1' | 'day-2' | 'day-3' | 'master' | 'notes';
-  onSelectTab: (tab: 'chronicle' | 'day-1' | 'day-2' | 'day-3' | 'master' | 'notes') => void;
+  currentTab: 'chronicle' | 'day-1' | 'day-2' | 'day-3' | 'master' | 'gallery' | 'notes';
+  onSelectTab: (tab: 'chronicle' | 'day-1' | 'day-2' | 'day-3' | 'master' | 'gallery' | 'notes') => void;
   theme: 'dark' | 'light';
   onToggleTheme: () => void;
   searchQuery: string;
@@ -49,6 +50,7 @@ export function AmpChronicleHeader({
     { id: 'day-2', label: 'Day 2' },
     { id: 'day-3', label: 'Day 3' },
     { id: 'master', label: 'Master Map' },
+    { id: 'gallery', label: 'Photos (16)', hasIcon: true },
     { id: 'notes', label: 'Notes' },
   ] as const;
 
@@ -101,13 +103,16 @@ export function AmpChronicleHeader({
                 key={tab.id}
                 type="button"
                 onClick={() => onSelectTab(tab.id)}
-                className={`relative px-2.5 sm:px-3 py-1 text-xs font-mono uppercase tracking-wider rounded-sm transition-all cursor-pointer select-none ${
+                className={`relative inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 text-xs font-mono uppercase tracking-wider rounded-sm transition-all cursor-pointer select-none ${
                   isActive
                     ? 'bg-[#e4eae0] dark:bg-[#1c2520] text-[#18201a] dark:text-[#f5f6ed] font-semibold border border-[#cfd8cb] dark:border-[#2e3e34]'
                     : 'text-[#607065] dark:text-[#88968d] hover:text-[#18201a] dark:hover:text-[#dfdfc1] hover:bg-[#ebf0e7] dark:hover:bg-[#141c18]/60'
                 }`}
               >
-                {tab.label}
+                {tab.id === 'gallery' && (
+                  <Camera className={`w-3.5 h-3.5 ${isActive ? 'text-[#f6833b]' : 'text-[#88968d]'}`} />
+                )}
+                <span>{tab.label}</span>
               </button>
             );
           })}

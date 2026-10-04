@@ -10,9 +10,11 @@ import { toast } from 'sonner';
 import { Place } from '@/src/types';
 import { KL_26_01_DESTINATION, KL_26_01_DAYS, KL_26_01_META } from './data';
 import { DayGoogleMap } from '@/src/components/DayGoogleMap';
-import { TimelineItem } from '@/src/components/TimelineItem';
+import { TimelineItem, PhotoLayoutMode } from '@/src/components/TimelineItem';
 import { MasterMapView } from '@/src/components/MasterMapView';
 import { FeaturedChronicleBanner } from '@/src/components/FeaturedChronicleBanner';
+import { PhotoLightboxModal } from '@/src/components/PhotoLightboxModal';
+import { VisualChronicleGallery } from '@/src/components/VisualChronicleGallery';
 import {
   ListOrdered,
   Sparkles,
@@ -26,13 +28,18 @@ import {
   CheckCircle2,
   AlertCircle,
   Search,
+  Camera,
+  Image as ImageIcon,
+  LayoutGrid,
+  AlignLeft,
+  Eye,
 } from 'lucide-react';
 
 export { KL_26_01_DESTINATION, KL_26_01_DAYS, KL_26_01_META };
 
 export interface DestinationViewProps {
-  currentTab?: 'chronicle' | 'day-1' | 'day-2' | 'day-3' | 'master' | 'notes';
-  onSelectTab?: (tab: 'chronicle' | 'day-1' | 'day-2' | 'day-3' | 'master' | 'notes') => void;
+  currentTab?: 'chronicle' | 'day-1' | 'day-2' | 'day-3' | 'master' | 'gallery' | 'notes';
+  onSelectTab?: (tab: 'chronicle' | 'day-1' | 'day-2' | 'day-3' | 'master' | 'gallery' | 'notes') => void;
   searchQuery?: string;
   selectedPlaceId?: string | null;
   onSelectPlace?: (place: Place | null) => void;
@@ -46,10 +53,17 @@ export function KL2601DestinationView({
   onSelectPlace: controlledOnSelectPlace,
 }: DestinationViewProps) {
   const [internalSelectedPlaceId, setInternalSelectedPlaceId] = useState<string | null>(null);
+  const [photoLayout, setPhotoLayout] = useState<PhotoLayoutMode>('editorial');
+  const [lightboxPlace, setLightboxPlace] = useState<Place | null>(null);
+  const [isLightboxOpen, setIsLightboxOpen] = useState<boolean>(false);
+
   const selectedPlaceId =
     controlledSelectedPlaceId !== undefined
       ? controlledSelectedPlaceId
       : internalSelectedPlaceId;
+
+  const destination = KL_26_01_DESTINATION;
+  const allPlaces = destination.days.flatMap((d) => d.places);
 
   const handleSelectPlace = (place: Place | null) => {
     if (controlledOnSelectPlace) {
@@ -65,7 +79,10 @@ export function KL2601DestinationView({
     }
   };
 
-  const destination = KL_26_01_DESTINATION;
+  const handleOpenLightbox = (place: Place) => {
+    setLightboxPlace(place);
+    setIsLightboxOpen(true);
+  };
 
   // Filter days based on tab
   let daysToRender = destination.days;
@@ -93,34 +110,115 @@ export function KL2601DestinationView({
             el?.scrollIntoView({ behavior: 'smooth' });
           }}
           onOpenMasterMap={() => onSelectTab && onSelectTab('master')}
+          onOpenGallery={() => onSelectTab && onSelectTab('gallery')}
         />
       )}
 
-      {/* When on Master Map tab, show MasterMapView directly */}
-      {currentTab === 'master' ? (
+      {/* When on Gallery tab, show the curated Visual Chronicle Gallery */}
+      {currentTab === 'gallery' ? (
+        <VisualChronicleGallery
+          days={destination.days}
+          onSelectPlace={handleSelectPlace}
+          onInspectPhoto={handleOpenLightbox}
+          onJumpToItinerary={(dayNumber, placeId) => {
+            if (onSelectTab) {
+              onSelectTab(`day-${dayNumber}` as any);
+            }
+            handleSelectPlace(allPlaces.find((p) => p.id === placeId) || null);
+          }}
+        />
+      ) : currentTab === 'master' ? (
+        /* When on Master Map tab, show MasterMapView directly */
         <MasterMapView
           days={destination.days}
           selectedPlaceId={selectedPlaceId}
           onSelectPlace={handleSelectPlace}
+          onInspectPhoto={handleOpenLightbox}
         />
       ) : (
         /* Daily Itinerary Cards in Amp Chronicle styling */
         <div className="space-y-6">
-          {/* Status line / Section indicator */}
-          <div className="flex items-center justify-between px-1 text-xs font-mono text-[#607065] dark:text-[#88968d] uppercase tracking-wider">
+          {/* Status line / Section indicator with Visual Mode Toolbar */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-1 py-1 text-xs font-mono text-[#607065] dark:text-[#88968d]">
             <div className="flex items-center gap-2">
-              <span className="text-[#18201a] dark:text-[#dfdfc1] font-bold">
+              <span className="text-[#18201a] dark:text-[#dfdfc1] font-bold uppercase tracking-wider">
                 {isSearching
                   ? `Search Results for "${searchQuery}"`
                   : currentTab === 'chronicle'
                   ? 'All 3 Daily Circuits // Sequential Stream'
                   : `Circuit: Day ${daysToRender[0]?.dayNumber} // ${daysToRender[0]?.badge}`}
               </span>
+              <span className="text-[11px] opacity-70">
+                ({daysToRender.reduce((acc, d) => acc + d.places.length, 0)} Stops)
+              </span>
             </div>
 
-            <span className="text-[11px] text-[#607065] dark:text-[#88968d]">
-              {daysToRender.reduce((acc, d) => acc + d.places.length, 0)} Stops Total
-            </span>
+            {/* Visual View Mode Controls */}
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="inline-flex items-center rounded-xs border border-[#d6ded4] dark:border-[#223027] bg-[#edf2ea] dark:bg-[#121815] p-0.5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPhotoLayout('editorial');
+                    toast('Switched to Editorial Photos mode', { duration: 1500 });
+                  }}
+                  className={`inline-flex items-center gap-1 px-2 py-1 rounded-2xs text-[10px] uppercase font-mono transition cursor-pointer ${
+                    photoLayout === 'editorial'
+                      ? 'bg-white dark:bg-[#1c2520] text-[#f6833b] font-bold shadow-2xs'
+                      : 'text-[#607065] dark:text-[#88968d] hover:text-[#18201a] dark:hover:text-[#dfdfc1]'
+                  }`}
+                  title="Full editorial photography cards"
+                >
+                  <Camera className="w-3 h-3" />
+                  <span>Iconic Photos</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPhotoLayout('compact');
+                    toast('Switched to Compact Cards mode', { duration: 1500 });
+                  }}
+                  className={`inline-flex items-center gap-1 px-2 py-1 rounded-2xs text-[10px] uppercase font-mono transition cursor-pointer ${
+                    photoLayout === 'compact'
+                      ? 'bg-white dark:bg-[#1c2520] text-[#f6833b] font-bold shadow-2xs'
+                      : 'text-[#607065] dark:text-[#88968d] hover:text-[#18201a] dark:hover:text-[#dfdfc1]'
+                  }`}
+                  title="Compact side thumbnail cards"
+                >
+                  <LayoutGrid className="w-3 h-3" />
+                  <span>Compact</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPhotoLayout('none');
+                    toast('Switched to Minimal text mode', { duration: 1500 });
+                  }}
+                  className={`inline-flex items-center gap-1 px-2 py-1 rounded-2xs text-[10px] uppercase font-mono transition cursor-pointer ${
+                    photoLayout === 'none'
+                      ? 'bg-white dark:bg-[#1c2520] text-[#f6833b] font-bold shadow-2xs'
+                      : 'text-[#607065] dark:text-[#88968d] hover:text-[#18201a] dark:hover:text-[#dfdfc1]'
+                  }`}
+                  title="Minimalist text layout (no photos)"
+                >
+                  <AlignLeft className="w-3 h-3" />
+                  <span>Text Only</span>
+                </button>
+              </div>
+
+              {/* Quick jump to photo gallery button */}
+              <button
+                type="button"
+                onClick={() => onSelectTab && onSelectTab('gallery')}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xs border border-[#f6833b]/40 bg-[#f6833b]/10 text-[#f6833b] hover:bg-[#f6833b]/20 text-[10px] font-mono font-bold uppercase transition cursor-pointer"
+                title="Browse all 16 iconic landmarks in photo gallery"
+              >
+                <Eye className="w-3 h-3" />
+                <span>Visual Gallery</span>
+              </button>
+            </div>
           </div>
 
           {/* Render Days */}
@@ -187,12 +285,13 @@ export function KL2601DestinationView({
                     day={day}
                     selectedPlaceId={selectedPlaceId}
                     onSelectPlace={handleSelectPlace}
+                    onInspectPhoto={handleOpenLightbox}
                   />
                 </div>
 
                 {/* Sequential Timeline Items */}
                 <div className="p-3 sm:p-5 pt-2">
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     {matchingPlaces.map((place, index) => (
                       <TimelineItem
                         key={place.id}
@@ -205,6 +304,8 @@ export function KL2601DestinationView({
                           )
                         }
                         isLast={index === matchingPlaces.length - 1}
+                        photoLayout={photoLayout}
+                        onInspectPhoto={handleOpenLightbox}
                       />
                     ))}
                   </div>
@@ -252,6 +353,15 @@ export function KL2601DestinationView({
         </div>
       )}
 
+      {/* Photo Lightbox Modal */}
+      <PhotoLightboxModal
+        isOpen={isLightboxOpen}
+        place={lightboxPlace}
+        allPlaces={allPlaces}
+        onClose={() => setIsLightboxOpen(false)}
+        onSelectPlace={(p) => setLightboxPlace(p)}
+      />
+
       {/* Destination Metadata Footer */}
       <footer className="text-center font-mono text-xs text-[#607065] dark:text-[#88968d] py-8 border-t border-[#e0e5dd] dark:border-[#223027] space-y-2 transition-colors">
         <div className="flex items-center justify-center gap-2 text-[#18201a] dark:text-[#dfdfc1]">
@@ -261,7 +371,7 @@ export function KL2601DestinationView({
           </span>
         </div>
         <p className="text-[11px] text-[#607065] dark:text-[#88968d]">
-          Amp Chronicle Edition • Zero-Backtracking Kuala Lumpur Circuit • 16 Curated Waypoints
+          Amp Chronicle Edition • Zero-Backtracking Kuala Lumpur Circuit • 16 Iconic Waypoints with Curated Photography
         </p>
       </footer>
     </div>
@@ -269,3 +379,4 @@ export function KL2601DestinationView({
 }
 
 export default KL2601DestinationView;
+

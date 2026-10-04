@@ -1,7 +1,18 @@
 import React, { type MouseEvent } from 'react';
 import { Place } from '../types';
-import { MapPin, Clock, ExternalLink, Copy, Check } from 'lucide-react';
+import {
+  MapPin,
+  Clock,
+  ExternalLink,
+  Copy,
+  Check,
+  Camera,
+  Maximize2,
+  Sparkles,
+} from 'lucide-react';
 import { toast } from 'sonner';
+
+export type PhotoLayoutMode = 'editorial' | 'compact' | 'none';
 
 export interface TimelineItemProps {
   key?: string;
@@ -10,6 +21,8 @@ export interface TimelineItemProps {
   isSelected: boolean;
   onSelect: () => void;
   isLast: boolean;
+  photoLayout?: PhotoLayoutMode;
+  onInspectPhoto?: (place: Place) => void;
 }
 
 export function TimelineItem({
@@ -18,6 +31,8 @@ export function TimelineItem({
   isSelected,
   onSelect,
   isLast,
+  photoLayout = 'editorial',
+  onInspectPhoto,
 }: TimelineItemProps) {
   const copyCoordinates = (e: MouseEvent) => {
     e.stopPropagation();
@@ -30,6 +45,15 @@ export function TimelineItem({
   };
 
   const formattedNumber = String(place.number).padStart(2, '0');
+
+  const handlePhotoClick = (e: MouseEvent) => {
+    e.stopPropagation();
+    if (onInspectPhoto) {
+      onInspectPhoto(place);
+    } else {
+      onSelect();
+    }
+  };
 
   return (
     <div
@@ -81,7 +105,7 @@ export function TimelineItem({
       </div>
 
       {/* Content Column */}
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0 w-full">
         <div className="flex items-start justify-between gap-3 mb-1.5">
           <h3
             className={`text-base sm:text-lg font-serif tracking-tight leading-snug transition-colors duration-150 ${
@@ -94,6 +118,18 @@ export function TimelineItem({
           </h3>
 
           <div className="flex items-center gap-1.5 shrink-0">
+            {place.photo && (
+              <button
+                type="button"
+                onClick={handlePhotoClick}
+                className="hidden sm:inline-flex text-[11px] font-mono px-2 py-0.5 rounded-xs border items-center gap-1 text-[#607065] dark:text-[#88968d] hover:text-[#f6833b] dark:hover:text-[#f6833b] border-[#d2ddd0] dark:border-[#223027] bg-[#edf2ea] dark:bg-[#101613] hover:border-[#f6833b]/50 transition cursor-pointer"
+                title="Inspect iconic photograph"
+              >
+                <Camera className="w-3 h-3 text-[#f6833b]" />
+                <span>Photo</span>
+              </button>
+            )}
+
             <span
               className={`hidden sm:inline-flex text-[11px] font-mono px-2 py-0.5 rounded-xs border items-center gap-1 transition-all duration-150 ${
                 isSelected
@@ -134,9 +170,93 @@ export function TimelineItem({
           </div>
         </div>
 
-        <p className="text-xs sm:text-sm text-[#526357] dark:text-[#88968d] leading-relaxed mb-3">
-          {place.description}
-        </p>
+        {/* Compact Mode: Side thumbnail and description */}
+        {photoLayout === 'compact' && place.photo ? (
+          <div className="flex flex-col sm:flex-row gap-3.5 mb-3">
+            <div
+              onClick={handlePhotoClick}
+              className="relative w-full sm:w-44 h-32 shrink-0 rounded-xs overflow-hidden border border-[#d6ded4] dark:border-[#223027] group/photo cursor-zoom-in shadow-2xs"
+            >
+              <img
+                src={place.photo.url}
+                alt={place.name}
+                loading="lazy"
+                className="w-full h-full object-cover transition-transform duration-300 group-hover/photo:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-80" />
+              {place.photo.category && (
+                <span className="absolute top-1.5 left-1.5 text-[9px] font-mono px-1.5 py-0.5 rounded-xs bg-black/60 backdrop-blur-xs text-[#fbbf24] font-semibold">
+                  {place.photo.category}
+                </span>
+              )}
+              <span className="absolute bottom-1.5 right-1.5 text-[10px] font-mono text-white/90 bg-black/60 px-1.5 py-0.5 rounded-xs flex items-center gap-1 group-hover/photo:text-[#f6833b] transition-colors">
+                <Maximize2 className="w-2.5 h-2.5" />
+                <span>Zoom</span>
+              </span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs sm:text-sm text-[#526357] dark:text-[#88968d] leading-relaxed mb-2">
+                {place.description}
+              </p>
+              <p className="text-[11px] font-mono italic text-[#708075] dark:text-[#7f9084]">
+                "{place.photo.caption}"
+              </p>
+            </div>
+          </div>
+        ) : (
+          /* Editorial or Minimal Mode */
+          <>
+            <p className="text-xs sm:text-sm text-[#526357] dark:text-[#88968d] leading-relaxed mb-3">
+              {place.description}
+            </p>
+
+            {/* Editorial Mode: Full Visual Photographic Showcase */}
+            {photoLayout === 'editorial' && place.photo && (
+              <div
+                onClick={handlePhotoClick}
+                className="relative rounded-sm overflow-hidden border border-[#d6ded4] dark:border-[#223027] group/photo mb-3.5 bg-black/5 shadow-2xs cursor-zoom-in"
+              >
+                <div className="w-full h-44 sm:h-52 overflow-hidden relative">
+                  <img
+                    src={place.photo.url}
+                    alt={place.name}
+                    loading="lazy"
+                    className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover/photo:scale-103"
+                  />
+                  {/* Subtle vignette/gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/10 transition-opacity" />
+
+                  {/* Category Pill */}
+                  {place.photo.category && (
+                    <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-xs bg-black/65 backdrop-blur-md border border-white/15 text-[10px] font-mono uppercase tracking-wider text-[#fbbf24] flex items-center gap-1 font-semibold shadow-xs">
+                      <Sparkles className="w-2.5 h-2.5 text-[#f6833b]" />
+                      <span>{place.photo.category}</span>
+                    </div>
+                  )}
+
+                  {/* Expand Lightbox Cue */}
+                  <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-xs bg-black/60 hover:bg-black/80 backdrop-blur-md border border-white/20 text-[10px] font-mono text-white flex items-center gap-1 transition-all group-hover/photo:border-[#f6833b] group-hover/photo:text-[#f6833b]">
+                    <Maximize2 className="w-3 h-3" />
+                    <span>Expand Photo</span>
+                  </div>
+
+                  {/* Bottom Caption & Photo Tip on photo */}
+                  <div className="absolute bottom-0 inset-x-0 p-3 sm:p-3.5 flex flex-col justify-end text-white">
+                    <p className="text-xs sm:text-sm font-serif italic text-white/95 leading-tight drop-shadow-sm line-clamp-1 sm:line-clamp-none">
+                      "{place.photo.caption}"
+                    </p>
+                    {place.photo.photoTip && (
+                      <div className="mt-1 flex items-center gap-1.5 text-[10px] font-mono text-[#a3d8b5]">
+                        <Camera className="w-3 h-3 text-[#78d197] shrink-0" />
+                        <span className="truncate">{place.photo.photoTip}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
+        )}
 
         {/* Tags */}
         <div className="flex flex-wrap items-center gap-1.5">

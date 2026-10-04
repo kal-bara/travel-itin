@@ -17,12 +17,14 @@ import {
   Clock,
   Calendar,
   Layers,
+  Camera,
 } from 'lucide-react';
 
 interface MasterMapViewProps {
   days: DayItinerary[];
   selectedPlaceId: string | null;
   onSelectPlace: (place: Place | null) => void;
+  onInspectPhoto?: (place: Place) => void;
 }
 
 function MasterMapBoundsController({
@@ -63,6 +65,7 @@ export function MasterMapView({
   days,
   selectedPlaceId,
   onSelectPlace,
+  onInspectPhoto,
 }: MasterMapViewProps) {
   const [activeDayFilter, setActiveDayFilter] = useState<'all' | number>('all');
   const [resetTrigger, setResetTrigger] = useState(0);
@@ -228,9 +231,36 @@ export function MasterMapView({
                 position={selectedPlace.coordinates}
                 onCloseClick={() => onSelectPlace(null)}
                 pixelOffset={[0, -35]}
-                maxWidth={300}
+                maxWidth={320}
               >
                 <div className="p-1 font-sans text-stone-800">
+                  {/* Photo banner */}
+                  {selectedPlace.photo && (
+                    <div
+                      onClick={() => onInspectPhoto?.(selectedPlace)}
+                      className="relative w-full h-32 mb-2 rounded-xs overflow-hidden border border-stone-200 cursor-pointer group shadow-2xs"
+                    >
+                      <img
+                        src={selectedPlace.photo.url}
+                        alt={selectedPlace.name}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
+                      {selectedPlace.photo.category && (
+                        <span className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-xs bg-black/70 backdrop-blur-xs text-[9px] font-mono text-amber-300 font-bold">
+                          {selectedPlace.photo.category}
+                        </span>
+                      )}
+                      <span className="absolute bottom-1.5 right-1.5 text-[9px] font-mono text-white bg-black/60 px-1.5 py-0.5 rounded-xs flex items-center gap-1 group-hover:text-[#f6833b]">
+                        <Camera className="w-2.5 h-2.5" />
+                        <span>Inspect Photo</span>
+                      </span>
+                      <span className="absolute bottom-1.5 left-1.5 text-[10px] font-serif italic text-white/90 truncate max-w-[190px]">
+                        "{selectedPlace.photo.caption}"
+                      </span>
+                    </div>
+                  )}
+
                   <div className="flex items-center gap-1.5 mb-1 font-mono">
                     <span
                       className="px-1.5 py-0.5 rounded text-[10px] font-bold text-white"
@@ -244,7 +274,7 @@ export function MasterMapView({
                     </span>
                   </div>
 
-                  <h4 className="text-sm font-bold text-stone-900 leading-tight mb-1">
+                  <h4 className="text-sm font-bold text-stone-900 leading-tight mb-1 font-serif">
                     {selectedPlace.name}
                   </h4>
 
@@ -331,22 +361,44 @@ export function MasterMapView({
                       key={place.id}
                       type="button"
                       onClick={() => onSelectPlace(place)}
-                      className={`w-full text-left p-2 rounded-xs text-xs font-mono transition cursor-pointer flex items-start gap-2 border ${
+                      className={`w-full text-left p-2 rounded-xs text-xs font-mono transition cursor-pointer flex items-center gap-2.5 border group ${
                         isSelected
                           ? 'bg-[#eaf1e7] dark:bg-[#1c2520] border-[#f6833b] text-[#18201a] dark:text-[#f5f6ed] shadow-xs'
                           : 'bg-white dark:bg-[#121815]/60 hover:bg-[#edf2ea] dark:hover:bg-[#18241e] border-[#e0e5dd] dark:border-[#223027] text-[#607065] dark:text-[#88968d] hover:text-[#18201a] dark:hover:text-[#dfdfc1]'
                       }`}
                     >
                       <span
-                        className="w-5 h-5 rounded-xs flex items-center justify-center text-[10px] font-bold text-white shrink-0 mt-0.5"
+                        className="w-5 h-5 rounded-xs flex items-center justify-center text-[10px] font-bold text-white shrink-0"
                         style={{ backgroundColor: isSelected ? '#f6833b' : day.color }}
                       >
                         {activeDayFilter === 'all'
                           ? place.globalNumber || place.number
                           : place.number}
                       </span>
+
+                      {/* Micro thumbnail */}
+                      {place.photo && (
+                        <div
+                          onClick={(e) => {
+                            if (onInspectPhoto) {
+                              e.stopPropagation();
+                              onInspectPhoto(place);
+                            }
+                          }}
+                          className="w-9 h-9 rounded-xs overflow-hidden shrink-0 border border-black/10 dark:border-white/10 relative"
+                          title="Click to inspect photo"
+                        >
+                          <img
+                            src={place.photo.url}
+                            alt={place.name}
+                            className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-110"
+                            loading="lazy"
+                          />
+                        </div>
+                      )}
+
                       <div className="min-w-0 flex-1">
-                        <div className="font-medium truncate text-[#18201a] dark:text-[#f5f6ed]">
+                        <div className="font-medium truncate text-[#18201a] dark:text-[#f5f6ed] text-xs">
                           {activeDayFilter === 'all' && (
                             <span className="opacity-60 text-[10px] mr-1">
                               #{place.number}

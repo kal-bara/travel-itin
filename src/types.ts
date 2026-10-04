@@ -1,3 +1,23 @@
+export interface PlacePhoto {
+  url: string;
+  thumbnailUrl?: string;
+  caption: string;
+  credit?: string;
+  category?:
+    | 'Architecture'
+    | 'Architecture & Nature'
+    | 'Culinary'
+    | 'Culinary & Heritage'
+    | 'Nature & Skyline'
+    | 'Heritage & Cafe'
+    | 'Heritage & Culture'
+    | 'Culture'
+    | 'Atmosphere'
+    | string;
+  photoTip?: string;
+  aspectRatio?: '16:9' | '4:3' | '1:1';
+}
+
 export interface PlaceTag {
   text: string;
   type?: 'default' | 'highlight' | 'cost' | 'opt';
@@ -16,6 +36,7 @@ export interface Place {
     lng: number;
   };
   area: string;
+  photo?: PlacePhoto;
 }
 
 export interface DayItinerary {

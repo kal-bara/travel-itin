@@ -28,7 +28,7 @@ export default function App() {
     return 'dark';
   });
   const [currentTab, setCurrentTab] = useState<
-    'chronicle' | 'day-1' | 'day-2' | 'day-3' | 'master' | 'notes'
+    'chronicle' | 'day-1' | 'day-2' | 'day-3' | 'master' | 'gallery' | 'notes'
   >('chronicle');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);

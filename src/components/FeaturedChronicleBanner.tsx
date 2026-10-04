@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Sparkles, MapPin, Navigation, Calendar, Compass, ArrowRight } from 'lucide-react';
+import { Sparkles, MapPin, Navigation, Calendar, Compass, ArrowRight, Camera, Eye } from 'lucide-react';
 import { DayItinerary } from '../types';
 
 interface FeaturedChronicleBannerProps {
@@ -9,6 +9,7 @@ interface FeaturedChronicleBannerProps {
   totalStops: number;
   onExploreDay: () => void;
   onOpenMasterMap: () => void;
+  onOpenGallery?: () => void;
 }
 
 export function FeaturedChronicleBanner({
@@ -17,7 +18,15 @@ export function FeaturedChronicleBanner({
   totalStops,
   onExploreDay,
   onOpenMasterMap,
+  onOpenGallery,
 }: FeaturedChronicleBannerProps) {
+  const previewThumbnails = [
+    { name: 'Bukit Tunku Dawn', url: 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?auto=format&fit=crop&w=300&q=80' },
+    { name: 'ISTAC Moorish Arches', url: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=300&q=80' },
+    { name: 'KLCC Ancient Ficus', url: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=300&q=80' },
+    { name: 'Kwai Chai Hong Bridge', url: 'https://images.unsplash.com/photo-1590073844006-33379778ae09?auto=format&fit=crop&w=300&q=80' },
+  ];
+
   return (
     <section className="relative w-full rounded-sm border border-[#e0e5dd] dark:border-[#223027] bg-[#fbfdf9] dark:bg-[#0e1411] overflow-hidden transition-colors shadow-xs">
       {/* Editorial Top Bar / Metadata */}
@@ -35,7 +44,7 @@ export function FeaturedChronicleBanner({
 
         <div className="flex items-center gap-2">
           <span className="px-2 py-0.5 rounded-xs bg-[#e0e8dd] dark:bg-[#1a241f] text-[#2d7745] dark:text-[#78d197] font-semibold text-[11px] border border-[#d2ddd0] dark:border-[#2e3e34]">
-            Zero-Backtracking Flow
+            16 Iconic Landmarks Photographed
           </span>
         </div>
       </div>
@@ -65,6 +74,35 @@ export function FeaturedChronicleBanner({
                 ? `${day.subtitle} — Reorganized into tight geographic clusters saving up to 2 hours of road transit daily.`
                 : 'All 16 curated stops preserved and reorganized into tight geographic clusters across Bukit Tunku, Chow Kit, Petaling Jaya, Chinatown & Ampang.'}
             </p>
+
+            {/* Visual photography preview strip */}
+            <div className="pt-1 flex items-center gap-2.5">
+              <span className="text-[11px] font-mono text-[#607065] dark:text-[#88968d] uppercase tracking-wider flex items-center gap-1">
+                <Camera className="w-3.5 h-3.5 text-[#f6833b]" />
+                <span>Visual Highlights:</span>
+              </span>
+              <div className="flex items-center -space-x-2">
+                {previewThumbnails.map((item, idx) => (
+                  <img
+                    key={idx}
+                    src={item.url}
+                    alt={item.name}
+                    title={item.name}
+                    className="w-7 h-7 rounded-full object-cover border-2 border-white dark:border-[#121815] shadow-xs"
+                    loading="lazy"
+                  />
+                ))}
+              </div>
+              {onOpenGallery && (
+                <button
+                  type="button"
+                  onClick={onOpenGallery}
+                  className="text-[11px] font-mono text-[#f6833b] hover:underline font-bold ml-1 cursor-pointer"
+                >
+                  View 16 Photos →
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Quick Metrics & Actions */}
@@ -82,6 +120,18 @@ export function FeaturedChronicleBanner({
             </div>
 
             <div className="flex items-center gap-2.5">
+              {onOpenGallery && (
+                <button
+                  type="button"
+                  onClick={onOpenGallery}
+                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xs bg-[#ebf0e7] dark:bg-[#1a241f] hover:bg-[#dbe4d7] dark:hover:bg-[#223027] text-xs font-mono text-[#18201a] dark:text-[#dfdfc1] border border-[#d6ded4] dark:border-[#2e3e34] transition cursor-pointer font-medium"
+                >
+                  <Eye className="w-3.5 h-3.5 text-[#f6833b]" />
+                  <span className="hidden sm:inline">Photo</span>
+                  <span>Gallery</span>
+                </button>
+              )}
+
               <button
                 type="button"
                 onClick={onOpenMasterMap}
@@ -96,7 +146,7 @@ export function FeaturedChronicleBanner({
                 onClick={onExploreDay}
                 className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xs bg-[#f6833b] hover:bg-[#fa8e49] text-xs font-mono font-bold text-[#0b0d0b] transition cursor-pointer shadow-xs"
               >
-                <span>View Day Stops</span>
+                <span>View Circuit</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>

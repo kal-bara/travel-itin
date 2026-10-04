@@ -42,6 +42,13 @@ export const KL_26_01_DAYS: DayItinerary[] = [
           'Catch early morning sunrise over the city skyline where local cyclists and runners gather at Jalan Tunku Putra and Lookout Point @ Changkat Tunku.',
         area: 'Bukit Tunku',
         coordinates: { lat: 3.1672, lng: 101.6841 },
+        photo: {
+          url: 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?auto=format&fit=crop&w=1200&q=80',
+          caption: "Misty dawn light breaking over the tropical hills of Bukit Tunku with the KL skyline",
+          category: 'Nature & Skyline',
+          photoTip: 'Arrive at Jalan Tunku Putra by 06:45 AM for mist pockets rising between rainforest foliage.',
+          credit: 'Unsplash / Travel Chronicle',
+        },
         tags: [
           { text: 'Jalan Tunku Putra', type: 'default' },
           { text: 'Sunrise Spot', type: 'highlight' },
@@ -57,6 +64,13 @@ export const KL_26_01_DAYS: DayItinerary[] = [
           'Only 6 minutes away within Bukit Tunku. Admire the Alhambra-inspired Andalusian courtyards and rare Islamic manuscripts. Enjoy an unhurried morning coffee in the tranquil garden courtyard cafe.',
         area: 'Bukit Tunku',
         coordinates: { lat: 3.1610, lng: 101.6775 },
+        photo: {
+          url: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=1200&q=80',
+          caption: 'Alhambra-inspired Andalusian keyhole arches and tranquil geometric courtyard fountain',
+          category: 'Architecture',
+          photoTip: 'Frame through the shaded colonnade to highlight the symmetry of the central marble fountain.',
+          credit: 'Unsplash / Architecture Archive',
+        },
         tags: [
           { text: 'Bukit Tunku', type: 'default' },
           { text: 'Hall Entry: RM 20 (Cafe Free)', type: 'cost' },
@@ -73,6 +87,13 @@ export const KL_26_01_DAYS: DayItinerary[] = [
           "Short descent into Chow Kit. Sit down for artisan sourdough and pastries inside House of Wheat's cave-like aesthetic, then browse the 22 heritage 1940s pre-war shophouses with modern batik shops and design stores.",
         area: 'Chow Kit',
         coordinates: { lat: 3.1594, lng: 101.6987 },
+        photo: {
+          url: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=80',
+          caption: 'Restored 1940s colonial pre-war shophouse facade and artisan bakery cafe',
+          category: 'Heritage & Cafe',
+          photoTip: 'Step back to the far side of Jalan Doraisamy to capture the continuous facade colonnade.',
+          credit: 'Unsplash / Editorial Heritage',
+        },
         tags: [
           { text: 'Chow Kit', type: 'default' },
           { text: 'Brunch & Pastries', type: 'default' },
@@ -89,6 +110,13 @@ export const KL_26_01_DAYS: DayItinerary[] = [
           'Head down the road to Sasana Kijang for an air-conditioned afternoon walk through ancient Southeast Asian currencies and the RM 1 million real-banknote tunnel.',
         area: 'Sasana Kijang',
         coordinates: { lat: 3.1542, lng: 101.6917 },
+        photo: {
+          url: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
+          caption: 'The iconic logarithmic nautilus spiral staircase ascending through Sasana Kijang',
+          category: 'Architecture',
+          photoTip: 'Ground floor center looking straight up gives an optical vortex effect with natural skylight.',
+          credit: 'Unsplash / Modern Architecture',
+        },
         tags: [
           { text: 'Sasana Kijang', type: 'default' },
           { text: 'Free Entry', type: 'highlight' },
@@ -105,6 +133,13 @@ export const KL_26_01_DAYS: DayItinerary[] = [
           'Optimized routing: Located just 5–8 minutes from Bank Negara Museum. Stroll through the lush canopies, lake paths, and bamboo garden as the afternoon heat cools down, with great views of Merdeka 118.',
         area: 'Lake Gardens',
         coordinates: { lat: 3.1436, lng: 101.6888 },
+        photo: {
+          url: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=1200&q=80',
+          caption: 'Sunken bamboo playhouse and lotus lake framed against Merdeka 118',
+          category: 'Nature & Skyline',
+          photoTip: 'Catch late afternoon golden hour (17:00–17:45) when light strikes the lotus pads.',
+          credit: 'Unsplash / Botanical Collection',
+        },
         tags: [
           { text: 'Shifted from Vlog', type: 'opt' },
           { text: 'Merdeka 118 View', type: 'default' },
@@ -121,6 +156,13 @@ export const KL_26_01_DAYS: DayItinerary[] = [
           'A direct, stress-free 12-minute drive south to dinner. Feast on the signature claypot coconut curry crab with crusty bread, salted egg prawns, and fresh greens.',
         area: 'Pudu / Kenanga',
         coordinates: { lat: 3.1317, lng: 101.7103 },
+        photo: {
+          url: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=1200&q=80',
+          caption: 'Signature claypot coconut curry crab served bubbling hot with crusty bread',
+          category: 'Culinary',
+          photoTip: 'Get close in macro as the waiter cracks open the bubbling coconut curry claypot.',
+          credit: 'Unsplash / Culinary Journal',
+        },
         tags: [
           { text: 'Claypot Coconut Crab', type: 'highlight' },
           { text: 'Local Feast', type: 'default' },
@@ -152,6 +194,13 @@ export const KL_26_01_DAYS: DayItinerary[] = [
           'Fuel up early inside this 120-year-old restored brick diesel room before the morning crowd peaks. Enjoy their signature chewy bagels and Shroom Bagel sandwich.',
         area: 'Imbi',
         coordinates: { lat: 3.1450, lng: 101.7165 },
+        photo: {
+          url: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1200&q=80',
+          caption: '120-year-old restored red brick diesel powerhouse turned artisan sourdough bakery',
+          category: 'Heritage & Cafe',
+          photoTip: 'Morning sunlight beams through the arched steel-frame windows onto the bagel counter.',
+          credit: 'Unsplash / Heritage Cafe',
+        },
         tags: [
           { text: 'Imbi', type: 'default' },
           { text: 'Shroom Bagel', type: 'highlight' },
@@ -167,6 +216,13 @@ export const KL_26_01_DAYS: DayItinerary[] = [
           'Take the expressway west to this university dorm-turned-artisan bazaar. Check out independent maker pop-ups, stationery studios, or take part in a Japanese kokedama moss-ball workshop.',
         area: 'PJ / Bangsar Border',
         coordinates: { lat: 3.1189, lng: 101.6540 },
+        photo: {
+          url: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80',
+          caption: 'Artisan maker bazaar, hanging kokedama greenery, and independent craft studios',
+          category: 'Culture',
+          photoTip: 'Photograph from the 2nd-floor railing overlooking the bustling maker workshops below.',
+          credit: 'Unsplash / Maker Spaces',
+        },
         tags: [
           { text: 'PJ / Bangsar Border', type: 'default' },
           { text: 'Maker Workshops', type: 'default' },
@@ -182,6 +238,13 @@ export const KL_26_01_DAYS: DayItinerary[] = [
           "Just 6 minutes drive from Kedai KL. Pick up colorful, handcrafted Melaka-recipe Nyonya kuih and pandan cake, followed immediately by Kwong Wah's rich shaved-ice cendol (serving since 1958).",
         area: 'Seksyen 17, PJ',
         coordinates: { lat: 3.1278, lng: 101.6353 },
+        photo: {
+          url: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=1200&q=80',
+          caption: 'Handmade rainbow Nyonya kuih and 1958-recipe shaved-ice cendol with smoky Gula Melaka',
+          category: 'Culinary',
+          photoTip: 'A flat-lay perspective reveals the vibrant pastel geometry of kuih talam and pulut inti.',
+          credit: 'Unsplash / Nyonya Flavors',
+        },
         tags: [
           { text: 'Seksyen 17, PJ', type: 'default' },
           { text: 'Fresh Nyonya Kuih', type: 'highlight' },
@@ -198,6 +261,13 @@ export const KL_26_01_DAYS: DayItinerary[] = [
           'Optimized routing: Taman Yarl is situated right along the Old Klang Road corridor, only ~12 minutes south of PJ. Relax in its cozy lamps and taste their famous freshly baked butter cakes.',
         area: 'Taman Yarl, Old Klang Road',
         coordinates: { lat: 3.0742, lng: 101.6669 },
+        photo: {
+          url: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1200&q=80',
+          caption: 'Cozy mid-century timber interior and freshly sliced golden butter cakes',
+          category: 'Heritage & Cafe',
+          photoTip: 'Warm tungsten lamps create soft bokeh around the antique display cabinets.',
+          credit: 'Unsplash / Cozy Bakes',
+        },
         tags: [
           { text: 'Shifted from Day 1', type: 'opt' },
           { text: 'Soft Butter Cakes', type: 'highlight' },
@@ -214,6 +284,13 @@ export const KL_26_01_DAYS: DayItinerary[] = [
           'Head into KLCC before dusk. Marvel at the sprawling aerial roots of the giant Ficus trees that stood here before the Petronas Twin Towers rose above them.',
         area: 'KLCC',
         coordinates: { lat: 3.1558, lng: 101.7145 },
+        photo: {
+          url: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=1200&q=80',
+          caption: 'Massive century-old Ficus aerial banyan roots framing the Petronas Twin Towers',
+          category: 'Architecture & Nature',
+          photoTip: 'Use an ultra-wide focal length from the foot of the ancient Ficus looking up at the spires.',
+          credit: 'Unsplash / Twin Towers Landmark',
+        },
         tags: [
           { text: 'KLCC', type: 'default' },
           { text: 'Heritage Trees', type: 'default' },
@@ -230,6 +307,13 @@ export const KL_26_01_DAYS: DayItinerary[] = [
           'Conclude Day 2 relaxing parkside with refreshing mocktails, cocktails, or light tapas with the illuminated towers and park fountain reflections.',
         area: 'Mandarin Oriental KLCC',
         coordinates: { lat: 3.1565, lng: 101.7130 },
+        photo: {
+          url: 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=1200&q=80',
+          caption: 'Parkside terrace drinks with illuminated Lake Symphony fountain reflections',
+          category: 'Atmosphere',
+          photoTip: "Dusk 'blue hour' (19:20) captures both the violet sky and the glowing amber lanterns.",
+          credit: 'Unsplash / Skyline Evenings',
+        },
         tags: [
           { text: 'Mandarin Oriental', type: 'default' },
           { text: 'Skyline Vibe', type: 'default' },
@@ -261,6 +345,13 @@ export const KL_26_01_DAYS: DayItinerary[] = [
           "Experience local morning hustle and fresh fruits (like jambu). Sit down at Tai Ping Lang for duck egg char kway teow and a rich 'Thomas Cup' (Kopi + Milo). Buy hot Tai Zi Ta egg tarts and traditional sponge cake to takeaway.",
         area: 'Taman Muda, Ampang',
         coordinates: { lat: 3.1185, lng: 101.7618 },
+        photo: {
+          url: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80',
+          caption: 'Vibrant morning market energy, wok-tossed duck egg char kway teow, and flaky egg tarts',
+          category: 'Culinary',
+          photoTip: 'Fast shutter speed captures the fiery wok-hei flare as noodles are tossed at Tai Ping Lang.',
+          credit: 'Unsplash / Morning Market',
+        },
         tags: [
           { text: 'Taman Muda', type: 'default' },
           { text: 'Duck Egg CKT', type: 'highlight' },
@@ -277,6 +368,13 @@ export const KL_26_01_DAYS: DayItinerary[] = [
           'Drive up the Ampang corridor to the former ISKL international school. Unwind with a 30-min foot massage (~RM 50), enjoy your market sponge cake in the campus courtyard, and grab a craft matcha drink.',
         area: 'Ampang',
         coordinates: { lat: 3.1582, lng: 101.7485 },
+        photo: {
+          url: 'https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&w=1200&q=80',
+          caption: 'Adaptive-reuse former international school courtyard lawns and artisanal matcha bar',
+          category: 'Culture',
+          photoTip: 'The tree-shaded courtyard grass offers peaceful dappled sunlight for outdoor portraits.',
+          credit: 'Unsplash / Campus Green',
+        },
         tags: [
           { text: 'Ampang', type: 'default' },
           { text: 'Specialty Matcha', type: 'default' },
@@ -293,6 +391,13 @@ export const KL_26_01_DAYS: DayItinerary[] = [
           'Timing fix: Arrive during open service (closes ~2:30 PM). Savor signature toasted Hainan bread with kaya and cold butter cubes, half-boiled eggs, and silky iced cham under heritage wooden rafters.',
         area: 'Chinatown',
         coordinates: { lat: 3.1418, lng: 101.6974 },
+        photo: {
+          url: 'https://images.unsplash.com/photo-1578474846511-04ba529f0b88?auto=format&fit=crop&w=1200&q=80',
+          caption: 'Historic 1956 kopitiam serving charcoal-toasted kaya butter bread and cold cham',
+          category: 'Culinary & Heritage',
+          photoTip: 'Shoot the iconic dipping ritual of warm crusty toast into runny peppered eggs.',
+          credit: 'Unsplash / Kopitiam Tradition',
+        },
         tags: [
           { text: 'Shifted to Lunch', type: 'opt' },
           { text: 'Kaya Butter Toast', type: 'highlight' },
@@ -309,6 +414,13 @@ export const KL_26_01_DAYS: DayItinerary[] = [
           'Step directly out of Ho Kow into Lorong Panggung. Photograph the restored heritage murals depicting 1960s KL life, red wooden bridges, and nearby artisanal cafes.',
         area: 'Lorong Panggung',
         coordinates: { lat: 3.1419, lng: 101.6978 },
+        photo: {
+          url: 'https://images.unsplash.com/photo-1590073844006-33379778ae09?auto=format&fit=crop&w=1200&q=80',
+          caption: 'Iconic red wooden bridge, overhead lanterns, and interactive 1960s pre-war murals',
+          category: 'Heritage & Culture',
+          photoTip: 'Step onto the red bridge to frame the archway with lanterns hanging above the brick alley.',
+          credit: 'Unsplash / Chinatown Laneway',
+        },
         tags: [
           { text: 'Lorong Panggung', type: 'default' },
           { text: '1960s Murals', type: 'default' },

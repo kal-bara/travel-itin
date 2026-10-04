@@ -8,7 +8,7 @@ import {
 import { DayItinerary, Place } from '../types';
 import { MapPolyline } from './MapPolyline';
 import { MapMarkerPin } from './MapMarkerPin';
-import { ExternalLink, RotateCcw, MapPin, Navigation, Clock, Sparkles } from 'lucide-react';
+import { ExternalLink, RotateCcw, MapPin, Navigation, Clock, Sparkles, Camera } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface DayGoogleMapProps {
@@ -16,6 +16,7 @@ interface DayGoogleMapProps {
   selectedPlaceId: string | null;
   onSelectPlace: (place: Place | null) => void;
   heightClass?: string;
+  onInspectPhoto?: (place: Place) => void;
 }
 
 function MapController({
@@ -61,6 +62,7 @@ export function DayGoogleMap({
   selectedPlaceId,
   onSelectPlace,
   heightClass = 'h-[360px] sm:h-[400px]',
+  onInspectPhoto,
 }: DayGoogleMapProps) {
   const [resetTrigger, setResetTrigger] = useState<number>(0);
   const selectedPlace = day.places.find((p) => p.id === selectedPlaceId) || null;
@@ -166,9 +168,36 @@ export function DayGoogleMap({
               position={selectedPlace.coordinates}
               onCloseClick={() => onSelectPlace(null)}
               pixelOffset={[0, -35]}
-              maxWidth={310}
+              maxWidth={320}
             >
               <div className="p-1 font-sans text-stone-800">
+                {/* Iconic Place Photo Banner */}
+                {selectedPlace.photo && (
+                  <div
+                    onClick={() => onInspectPhoto?.(selectedPlace)}
+                    className="relative w-full h-32 mb-2 rounded-xs overflow-hidden border border-stone-200 cursor-pointer group shadow-2xs"
+                  >
+                    <img
+                      src={selectedPlace.photo.url}
+                      alt={selectedPlace.name}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
+                    {selectedPlace.photo.category && (
+                      <span className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-xs bg-black/70 backdrop-blur-xs text-[9px] font-mono text-amber-300 font-bold">
+                        {selectedPlace.photo.category}
+                      </span>
+                    )}
+                    <span className="absolute bottom-1.5 right-1.5 text-[9px] font-mono text-white bg-black/60 px-1.5 py-0.5 rounded-xs flex items-center gap-1 group-hover:text-[#f6833b] transition-colors">
+                      <Camera className="w-2.5 h-2.5" />
+                      <span>Inspect Photo</span>
+                    </span>
+                    <span className="absolute bottom-1.5 left-1.5 text-[10px] font-serif italic text-white/90 truncate max-w-[190px]">
+                      "{selectedPlace.photo.caption}"
+                    </span>
+                  </div>
+                )}
+
                 <div className="flex items-center gap-1.5 text-xs font-bold text-amber-900 mb-1">
                   <span
                     className="w-5 h-5 rounded-full flex items-center justify-center text-white text-[10px] font-bold"
@@ -176,7 +205,7 @@ export function DayGoogleMap({
                   >
                     {selectedPlace.number}
                   </span>
-                  <span className="text-sm leading-tight text-stone-900">
+                  <span className="text-sm leading-tight text-stone-900 font-serif">
                     {selectedPlace.name}
                   </span>
                 </div>
