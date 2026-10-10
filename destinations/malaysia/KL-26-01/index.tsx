@@ -41,8 +41,8 @@ import {
 export { KL_26_01_DESTINATION, KL_26_01_DAYS, KL_26_01_META };
 
 export interface DestinationViewProps {
-  currentTab?: 'chronicle' | 'day-1' | 'day-2' | 'day-3' | 'master' | 'gallery' | 'notes';
-  onSelectTab?: (tab: 'chronicle' | 'day-1' | 'day-2' | 'day-3' | 'master' | 'gallery' | 'notes') => void;
+  currentTab?: 'chronicle' | 'master' | 'gallery';
+  onSelectTab?: (tab: 'chronicle' | 'master' | 'gallery') => void;
   searchQuery?: string;
   selectedPlaceId?: string | null;
   onSelectPlace?: (place: Place | null) => void;
@@ -138,15 +138,8 @@ export function KL2601DestinationView({
     setIsUploadModalOpen(true);
   };
 
-  // Filter days based on tab
-  let daysToRender = activeDays;
-  if (currentTab === 'day-1') {
-    daysToRender = activeDays.filter((d) => d.dayNumber === 1);
-  } else if (currentTab === 'day-2') {
-    daysToRender = activeDays.filter((d) => d.dayNumber === 2);
-  } else if (currentTab === 'day-3') {
-    daysToRender = activeDays.filter((d) => d.dayNumber === 3);
-  }
+  // Render all active days sequentially in Chronicle view
+  const daysToRender = activeDays;
 
   // Filter places based on search query
   const searchTrimmed = searchQuery.trim().toLowerCase();
@@ -177,9 +170,11 @@ export function KL2601DestinationView({
           onOpenUpload={handleOpenUpload}
           onJumpToItinerary={(dayNumber, placeId) => {
             if (onSelectTab) {
-              onSelectTab(`day-${dayNumber}` as any);
+              onSelectTab('chronicle');
             }
             handleSelectPlace(allPlaces.find((p) => p.id === placeId) || null);
+            const el = document.getElementById(`timeline-item-${placeId}`);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }}
         />
       ) : currentTab === 'master' ? (
@@ -199,9 +194,7 @@ export function KL2601DestinationView({
               <span className="text-[#18201a] dark:text-[#dfdfc1] font-bold uppercase tracking-wider">
                 {isSearching
                   ? `Search Results for "${searchQuery}"`
-                  : currentTab === 'chronicle'
-                  ? 'All 3 Daily Circuits // Sequential Stream'
-                  : `Circuit: Day ${daysToRender[0]?.dayNumber} // ${daysToRender[0]?.badge}`}
+                  : 'All 3 Daily Circuits // Sequential Stream'}
               </span>
               <span className="text-[11px] opacity-70">
                 ({daysToRender.reduce((acc, d) => acc + d.places.length, 0)} Stops)

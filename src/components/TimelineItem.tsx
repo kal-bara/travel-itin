@@ -122,31 +122,6 @@ export function TimelineItem({
           </h3>
 
           <div className="flex items-center gap-1.5 shrink-0">
-            {onOpenUpload && (
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onOpenUpload(place);
-                }}
-                className={`inline-flex text-[11px] font-mono px-2 py-0.5 rounded-xs border items-center gap-1 transition cursor-pointer ${
-                  place.photo?.isCustom
-                    ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-700/50 hover:bg-emerald-100 dark:hover:bg-emerald-900/60'
-                    : 'text-[#405245] dark:text-[#88968d] hover:text-[#f6833b] dark:hover:text-[#f6833b] border-[#cbd6c8] dark:border-[#223027] bg-[#edf3ea] dark:bg-[#101613] hover:border-[#f6833b]/60'
-                }`}
-                title={place.photo?.isCustom ? 'Change your personal photo' : 'Upload your own photograph'}
-              >
-                {place.photo?.isCustom ? (
-                  <UserCheck className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-                ) : (
-                  <Upload className="w-3 h-3 text-[#f6833b]" />
-                )}
-                <span className="hidden sm:inline">
-                  {place.photo?.isCustom ? 'Your Photo' : 'Upload'}
-                </span>
-              </button>
-            )}
-
             {place.photo && (
               <button
                 type="button"

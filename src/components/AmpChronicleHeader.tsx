@@ -20,8 +20,8 @@ import {
 import { toast } from 'sonner';
 
 interface AmpChronicleHeaderProps {
-  currentTab: 'chronicle' | 'day-1' | 'day-2' | 'day-3' | 'master' | 'gallery' | 'notes';
-  onSelectTab: (tab: 'chronicle' | 'day-1' | 'day-2' | 'day-3' | 'master' | 'gallery' | 'notes') => void;
+  currentTab: 'chronicle' | 'master' | 'gallery';
+  onSelectTab: (tab: 'chronicle' | 'master' | 'gallery') => void;
   theme: 'dark' | 'light';
   onToggleTheme: () => void;
   searchQuery: string;
@@ -46,12 +46,8 @@ export function AmpChronicleHeader({
 
   const tabs = [
     { id: 'chronicle', label: 'Chronicle' },
-    { id: 'day-1', label: 'Day 1' },
-    { id: 'day-2', label: 'Day 2' },
-    { id: 'day-3', label: 'Day 3' },
     { id: 'master', label: 'Master Map' },
     { id: 'gallery', label: 'Photos (16)', hasIcon: true },
-    { id: 'notes', label: 'Notes' },
   ] as const;
 
   return (
