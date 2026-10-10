@@ -197,6 +197,10 @@ export function VisualChronicleGallery({
                   src={place.photo.url}
                   alt={place.name}
                   loading="lazy"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src =
+                      'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1200&q=80';
+                  }}
                   className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-104"
                 />
 

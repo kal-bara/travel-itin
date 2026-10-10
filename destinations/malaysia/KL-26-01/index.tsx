@@ -7,7 +7,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { toast } from 'sonner';
-import { Place } from '@/src/types';
+import { Place, Destination } from '@/src/types';
 import { KL_26_01_DESTINATION, KL_26_01_DAYS, KL_26_01_META } from './data';
 import { DayGoogleMap } from '@/src/components/DayGoogleMap';
 import { TimelineItem, PhotoLayoutMode } from '@/src/components/TimelineItem';
@@ -41,6 +41,7 @@ import {
 export { KL_26_01_DESTINATION, KL_26_01_DAYS, KL_26_01_META };
 
 export interface DestinationViewProps {
+  destination?: Destination;
   currentTab?: 'chronicle' | 'master' | 'gallery';
   onSelectTab?: (tab: 'chronicle' | 'master' | 'gallery') => void;
   searchQuery?: string;
@@ -49,6 +50,7 @@ export interface DestinationViewProps {
 }
 
 export function KL2601DestinationView({
+  destination: controlledDestination,
   currentTab = 'chronicle',
   onSelectTab,
   searchQuery = '',
@@ -78,7 +80,7 @@ export function KL2601DestinationView({
       ? controlledSelectedPlaceId
       : internalSelectedPlaceId;
 
-  const destination = KL_26_01_DESTINATION;
+  const destination = controlledDestination || KL_26_01_DESTINATION;
 
   // Merge custom photos from localStorage onto default place photos
   const activeDays = destination.days.map((day) => ({
@@ -150,6 +152,7 @@ export function KL2601DestinationView({
       {/* Featured Banner when on Chronicle Feed */}
       {currentTab === 'chronicle' && !isSearching && (
         <FeaturedChronicleBanner
+          destination={destination}
           totalDays={destination.meta.totalDays}
           totalStops={destination.meta.totalStops}
           onExploreDay={() => {
@@ -194,7 +197,7 @@ export function KL2601DestinationView({
               <span className="text-[#18201a] dark:text-[#dfdfc1] font-bold uppercase tracking-wider">
                 {isSearching
                   ? `Search Results for "${searchQuery}"`
-                  : 'All 3 Daily Circuits // Sequential Stream'}
+                  : `All ${destination.meta.totalDays} Daily Circuits // Sequential Stream`}
               </span>
               <span className="text-[11px] opacity-70">
                 ({daysToRender.reduce((acc, d) => acc + d.places.length, 0)} Stops)

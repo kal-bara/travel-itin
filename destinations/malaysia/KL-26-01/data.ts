@@ -1,14 +1,16 @@
 import { Destination, DestinationMeta, DayItinerary } from '@/src/types';
 
 export const KL_26_01_META: DestinationMeta = {
-  code: 'KL-26-01',
+  id: 'malaysia/kuala-lumpur-3d',
+  code: 'KUL-3D',
   cityCode: 'KL',
-  year: '26',
-  sequence: '01',
   cityName: 'Kuala Lumpur',
   country: 'malaysia',
   countryName: 'Malaysia',
-  title: '3 Days in Kuala Lumpur (Optimized)',
+  region: 'Southeast Asia',
+  flagEmoji: '🇲🇾',
+  routeSummary: 'Bukit Tunku • Petaling Jaya • Chinatown & Ampang',
+  title: '3 Days in Kuala Lumpur',
   badge: 'Smarter Flow • Zero Backtracking',
   subtitle: 'North & Central Heritage, West Belt / PJ, Ampang & Chinatown',
   description:
@@ -16,6 +18,8 @@ export const KL_26_01_META: DestinationMeta = {
   totalDays: 3,
   totalStops: 16,
 };
+
+export const KUL_3D_META = KL_26_01_META;
 
 export const KL_26_01_DAYS: DayItinerary[] = [
   {
@@ -435,3 +439,6 @@ export const KL_26_01_DESTINATION: Destination = {
   meta: KL_26_01_META,
   days: KL_26_01_DAYS,
 };
+
+export const KUL_3D_DAYS = KL_26_01_DAYS;
+export const KUL_3D_DESTINATION = KL_26_01_DESTINATION;

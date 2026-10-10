@@ -1,9 +1,10 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Sparkles, MapPin, Navigation, Calendar, Compass, ArrowRight, Camera, Eye } from 'lucide-react';
-import { DayItinerary } from '../types';
+import { DayItinerary, Destination } from '../types';
 
 interface FeaturedChronicleBannerProps {
+  destination?: Destination;
   day?: DayItinerary;
   totalDays: number;
   totalStops: number;
@@ -13,6 +14,7 @@ interface FeaturedChronicleBannerProps {
 }
 
 export function FeaturedChronicleBanner({
+  destination,
   day,
   totalDays,
   totalStops,
@@ -20,12 +22,23 @@ export function FeaturedChronicleBanner({
   onOpenMasterMap,
   onOpenGallery,
 }: FeaturedChronicleBannerProps) {
-  const previewThumbnails = [
+  // Extract photo thumbnails dynamically from the destination places
+  const dynamicThumbnails = destination?.days
+    ?.flatMap((d) => d.places)
+    ?.filter((p) => Boolean(p.photo?.url))
+    ?.slice(0, 4)
+    ?.map((p) => ({ name: p.name, url: p.photo!.url })) || [
     { name: 'Bukit Tunku Dawn', url: 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?auto=format&fit=crop&w=300&q=80' },
     { name: 'ISTAC Moorish Arches', url: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=300&q=80' },
     { name: 'KLCC Ancient Ficus', url: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=300&q=80' },
     { name: 'Kwai Chai Hong Bridge', url: 'https://images.unsplash.com/photo-1590073844006-33379778ae09?auto=format&fit=crop&w=300&q=80' },
   ];
+
+  const destinationTitle = destination?.meta.title || '3 Days in Kuala Lumpur';
+  const destinationBadge = destination?.meta.badge || 'Smarter Flow • Zero Backtracking';
+  const destinationSubtitle = destination?.meta.subtitle || 'North & Central Heritage, West Belt / PJ, Ampang & Chinatown';
+  const destinationCode = destination?.meta.code || 'KUL-3D';
+  const flagEmoji = destination?.meta.flagEmoji || '📍';
 
   return (
     <section className="relative w-full rounded-sm border border-[#e0e5dd] dark:border-[#223027] bg-[#fbfdf9] dark:bg-[#0e1411] overflow-hidden transition-colors shadow-xs">
@@ -33,18 +46,19 @@ export function FeaturedChronicleBanner({
       <div className="px-4 sm:px-6 py-2.5 bg-[#edf2ea] dark:bg-[#121815] border-b border-[#e0e5dd] dark:border-[#223027] flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-[#f6833b] animate-pulse" />
-          <span className="font-bold text-[#18201a] dark:text-[#dfdfc1] uppercase tracking-wider">
-            Kuala Lumpur • 2026 Edition
+          <span className="font-bold text-[#18201a] dark:text-[#dfdfc1] uppercase tracking-wider flex items-center gap-1.5">
+            <span>{flagEmoji}</span>
+            <span>{destinationTitle}</span>
           </span>
           <span className="text-[#607065] dark:text-[#88968d] hidden sm:inline">·</span>
-          <span className="text-[#607065] dark:text-[#88968d] hidden sm:inline">
-            Field Chronicle No. 01
+          <span className="text-[#f6833b] font-semibold hidden sm:inline">
+            Route // {destinationCode}
           </span>
         </div>
 
         <div className="flex items-center gap-2">
           <span className="px-2 py-0.5 rounded-xs bg-[#e0e8dd] dark:bg-[#1a241f] text-[#2d7745] dark:text-[#78d197] font-semibold text-[11px] border border-[#d2ddd0] dark:border-[#2e3e34]">
-            16 Iconic Landmarks Photographed
+            {totalStops} Iconic Stops Photographed
           </span>
         </div>
       </div>
@@ -56,33 +70,31 @@ export function FeaturedChronicleBanner({
           <div className="space-y-3">
             {/* Tag / Category line */}
             <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-[#607065] dark:text-[#88968d]">
-              <span className="text-[#f6833b] font-bold">Featured</span>
+              <span className="text-[#f6833b] font-bold">Curated Route</span>
               <span className="opacity-40">·</span>
-              <span>{day ? (day.date || '18–20 Sept 2026') : '18–20 Sept 2026'}</span>
+              <span>{totalDays} Sequential Days</span>
               <span className="opacity-40">·</span>
-              <span>{day ? day.badge : '3-Day Master Circuit'}</span>
+              <span>{destinationBadge}</span>
             </div>
 
             {/* Heading in editorial serif style */}
             <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight text-[#0b0f0c] dark:text-[#f5f6ed] leading-tight">
-              {day ? day.title : 'One Route Is Now Enough: Zero Backtracking in KL'}
+              {destinationTitle}: {destinationBadge}
             </h2>
 
             {/* Subtitle / Narrative Excerpt */}
             <p className="text-sm sm:text-base text-[#526357] dark:text-[#a8b6ad] leading-relaxed max-w-2xl">
-              {day
-                ? `${day.subtitle} — Reorganized into tight geographic clusters saving up to 2 hours of road transit daily.`
-                : 'All 16 curated stops preserved and reorganized into tight geographic clusters across Bukit Tunku, Chow Kit, Petaling Jaya, Chinatown & Ampang.'}
+              {destinationSubtitle}
             </p>
 
             {/* Visual photography preview strip */}
             <div className="pt-1 flex items-center gap-2.5">
               <span className="text-[11px] font-mono text-[#607065] dark:text-[#88968d] uppercase tracking-wider flex items-center gap-1">
                 <Camera className="w-3.5 h-3.5 text-[#f6833b]" />
-                <span>Visual Highlights:</span>
+                <span>Highlights:</span>
               </span>
               <div className="flex items-center -space-x-2">
-                {previewThumbnails.map((item, idx) => (
+                {dynamicThumbnails.map((item, idx) => (
                   <img
                     key={idx}
                     src={item.url}
@@ -99,7 +111,7 @@ export function FeaturedChronicleBanner({
                   onClick={onOpenGallery}
                   className="text-[11px] font-mono text-[#f6833b] hover:underline font-bold ml-1 cursor-pointer"
                 >
-                  View 16 Photos →
+                  View {totalStops} Photos →
                 </button>
               )}
             </div>

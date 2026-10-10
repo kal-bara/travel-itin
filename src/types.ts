@@ -44,6 +44,8 @@ export interface Place {
 export interface DayItinerary {
   id: string;
   dayNumber: number;
+  city?: string;
+  country?: string;
   date?: string;
   title: string;
   subtitle: string;
@@ -60,13 +62,17 @@ export interface DayItinerary {
 }
 
 export interface DestinationMeta {
-  code: string; // e.g. "KL-26-01"
-  cityCode: string; // e.g. "KL"
-  year: string; // e.g. "26"
-  sequence: string; // e.g. "01"
-  cityName: string; // e.g. "Kuala Lumpur"
-  country: string; // e.g. "malaysia"
-  countryName: string; // e.g. "Malaysia"
+  id?: string; // e.g. "malaysia/kuala-lumpur-3d" or "europe/western-capitals-10d"
+  code: string; // e.g. "KUL-3D" or "EUR-10D"
+  cityCode?: string;
+  year?: string;
+  sequence?: string;
+  cityName?: string;
+  country?: string;
+  countryName?: string;
+  region?: string; // e.g. "Southeast Asia" or "Europe"
+  routeSummary?: string; // e.g. "London • Paris • Amsterdam"
+  flagEmoji?: string; // e.g. "🇲🇾" or "🇪🇺"
   title: string;
   badge: string;
   subtitle: string;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Compass,
   MapPin,
@@ -16,8 +16,12 @@ import {
   X,
   Menu,
   Camera,
+  ChevronDown,
+  Check,
+  Globe,
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { getAllDestinations, getDestinationEntry } from '@/destinations/index';
 
 interface AmpChronicleHeaderProps {
   currentTab: 'chronicle' | 'master' | 'gallery';
@@ -29,6 +33,8 @@ interface AmpChronicleHeaderProps {
   apiKey: string;
   onOpenApiKeyModal: () => void;
   totalStops: number;
+  currentDestinationId?: string;
+  onSelectDestination?: (destinationPath: string) => void;
 }
 
 export function AmpChronicleHeader({
@@ -41,29 +47,48 @@ export function AmpChronicleHeader({
   apiKey,
   onOpenApiKeyModal,
   totalStops,
+  currentDestinationId = 'malaysia/kuala-lumpur-3d',
+  onSelectDestination,
 }: AmpChronicleHeaderProps) {
-  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [destMenuOpen, setDestMenuOpen] = useState(false);
+  const destMenuRef = useRef<HTMLDivElement>(null);
+
+  const allDestinations = getAllDestinations();
+  const activeEntry = getDestinationEntry(currentDestinationId);
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (destMenuRef.current && !destMenuRef.current.contains(event.target as Node)) {
+        setDestMenuOpen(false);
+      }
+    }
+    if (destMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [destMenuOpen]);
 
   const tabs = [
     { id: 'chronicle', label: 'Chronicle' },
     { id: 'master', label: 'Master Map' },
-    { id: 'gallery', label: 'Photos (16)', hasIcon: true },
+    { id: 'gallery', label: `Photos (${totalStops})`, hasIcon: true },
   ] as const;
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-[#e0e5dd] dark:border-[#223027] bg-[#fafaf8]/95 dark:bg-[#0b0d0b]/95 backdrop-blur-md transition-colors">
       <div className="w-full px-3 sm:px-6 md:px-8 mx-auto flex items-center justify-between h-14 sm:h-16 gap-3">
-        {/* Brand / Title with Amp's signature "//" format */}
-        <div className="flex items-center gap-3 shrink-0">
+        {/* Brand & Dynamic Destination Switcher */}
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <a
             href="#root"
             onClick={(e) => {
               e.preventDefault();
               onSelectTab('chronicle');
             }}
-            className="flex items-center gap-2.5 text-[#0b0f0c] dark:text-[#f5f6ed] hover:opacity-90 transition-opacity"
+            className="flex items-center gap-2 text-[#0b0f0c] dark:text-[#f5f6ed] hover:opacity-90 transition-opacity"
           >
-            {/* Chronicle Universal Itinerary Wayfinder & Circuit Emblem */}
             <img
               src="/favicon.svg?v=2"
               alt="Travel Chronicle Wayfinder"
@@ -76,17 +101,95 @@ export function AmpChronicleHeader({
                 Chronicle
               </span>
               <span className="text-[#f6833b] font-bold text-xs sm:text-sm">//</span>
-              <span className="text-xs uppercase text-[#607065] dark:text-[#88968d] hidden sm:inline font-mono">
-                KL-26-01
-              </span>
             </div>
           </a>
+
+          {/* Time-Agnostic Destination Picker Dropdown */}
+          <div className="relative" ref={destMenuRef}>
+            <button
+              type="button"
+              onClick={() => setDestMenuOpen(!destMenuOpen)}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm border border-[#d6ded4] dark:border-[#2e3e34] bg-white dark:bg-[#131b17] hover:border-[#f6833b] dark:hover:border-[#f6833b] text-xs font-mono text-[#18201a] dark:text-[#f5f6ed] transition-all cursor-pointer shadow-2xs group"
+              title="Switch Itinerary Destination"
+            >
+              <span className="text-sm">{activeEntry.flagEmoji}</span>
+              <span className="font-bold text-[#f6833b] uppercase tracking-wide">
+                {activeEntry.code}
+              </span>
+              <span className="hidden md:inline text-[#607065] dark:text-[#88968d] truncate max-w-[130px]">
+                {activeEntry.title.replace('3 Days in ', '').replace('10 Days in ', '')}
+              </span>
+              <ChevronDown
+                className={`w-3.5 h-3.5 text-[#88968d] transition-transform duration-200 ${
+                  destMenuOpen ? 'rotate-180 text-[#f6833b]' : 'group-hover:text-[#18201a] dark:group-hover:text-[#f5f6ed]'
+                }`}
+              />
+            </button>
+
+            {/* Destination Selection Dropdown Menu */}
+            {destMenuOpen && (
+              <div className="absolute top-full left-0 mt-1.5 w-72 sm:w-80 rounded-sm border border-[#d6ded4] dark:border-[#2e3e34] bg-[#fafaf8] dark:bg-[#0e1411] shadow-xl z-50 p-1.5 space-y-1 backdrop-blur-md animate-in fade-in zoom-in-95 duration-100">
+                <div className="px-2.5 py-1.5 border-b border-[#e0e5dd] dark:border-[#223027] flex items-center justify-between text-[11px] font-mono text-[#607065] dark:text-[#88968d]">
+                  <span className="uppercase font-semibold tracking-wider">Itinerary Registry</span>
+                  <span className="text-[10px] opacity-70">{allDestinations.length} Routes</span>
+                </div>
+
+                <div className="max-h-72 overflow-y-auto py-1 space-y-1">
+                  {allDestinations.map((dest) => {
+                    const isSelected = dest.path === activeEntry.path;
+                    return (
+                      <button
+                        key={dest.path}
+                        type="button"
+                        onClick={() => {
+                          if (onSelectDestination) {
+                            onSelectDestination(dest.path);
+                          }
+                          setDestMenuOpen(false);
+                        }}
+                        className={`w-full flex items-start gap-2.5 p-2 rounded-xs text-left font-mono transition-colors cursor-pointer ${
+                          isSelected
+                            ? 'bg-[#edf3ea] dark:bg-[#1a251f] border border-[#cfdcc9] dark:border-[#2d4234]'
+                            : 'hover:bg-[#f0f4ee] dark:hover:bg-[#151c18] border border-transparent'
+                        }`}
+                      >
+                        <span className="text-xl shrink-0 mt-0.5">{dest.flagEmoji}</span>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between gap-1">
+                            <span className="text-xs font-bold text-[#18201a] dark:text-[#f5f6ed] truncate">
+                              {dest.title}
+                            </span>
+                            <span className="text-[10px] px-1.5 py-0.2 rounded-2xs bg-[#e0e7dc] dark:bg-[#202c25] text-[#f6833b] font-bold shrink-0">
+                              {dest.code}
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-[#607065] dark:text-[#88968d] truncate mt-0.5">
+                            {dest.badge}
+                          </p>
+                          <div className="flex items-center gap-2 mt-1 text-[10px] text-[#88968d]">
+                            <span>{dest.totalDays} Days</span>
+                            <span>•</span>
+                            <span>{dest.totalStops} Stops</span>
+                            <span>•</span>
+                            <span className="text-[#18201a] dark:text-[#dfdfc1]">{dest.region}</span>
+                          </div>
+                        </div>
+                        {isSelected && (
+                          <Check className="w-4 h-4 text-[#2d7745] dark:text-[#78d197] shrink-0 mt-1" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
 
           <div className="hidden lg:flex items-center gap-1.5 px-2 py-0.5 rounded bg-[#ecefe9] dark:bg-[#131b17] border border-[#d6ded4] dark:border-[#223027] text-[11px] font-mono text-[#607065] dark:text-[#88968d]">
             <span className="text-[#18201a] dark:text-[#dfdfc1] font-medium">
               destinations/
             </span>
-            <span>malaysia/KL-26-01</span>
+            <span className="truncate max-w-[160px]">{activeEntry.path}</span>
           </div>
         </div>
 

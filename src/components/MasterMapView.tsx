@@ -96,11 +96,11 @@ export function MasterMapView({
               <Layers className="w-4 h-4" />
             </span>
             <h2 className="text-base sm:text-lg font-bold font-serif text-[#0b0f0c] dark:text-[#f5f6ed]">
-              Master Circuit Overview // 16 Stops
+              Master Circuit Overview // {days.reduce((acc, d) => acc + d.places.length, 0)} Stops
             </h2>
           </div>
           <p className="text-xs text-[#607065] dark:text-[#88968d] mt-1 font-mono">
-            3 Daily Geographic Clusters: Bukit Tunku & Chow Kit • Petaling Jaya • Chinatown & Ampang
+            Sequential Route Clusters • {days.length} Daily Corridors
           </p>
         </div>
 
@@ -112,8 +112,8 @@ export function MasterMapView({
               onClick={() => {
                 setActiveDayFilter('all');
                 setResetTrigger((p) => p + 1);
-                toast('Showing All 3 Days Route', {
-                  description: 'All 16 stops visible on the master map',
+                toast('Showing All Route Days', {
+                  description: `All ${days.reduce((acc, d) => acc + d.places.length, 0)} stops visible on the master map`,
                 });
               }}
               className={`px-2.5 py-1 rounded-xs uppercase tracking-wider transition cursor-pointer ${
@@ -122,7 +122,7 @@ export function MasterMapView({
                   : 'text-[#607065] dark:text-[#88968d] hover:text-[#18201a] dark:hover:text-[#dfdfc1]'
               }`}
             >
-              All 3 Days ({days.reduce((acc, d) => acc + d.places.length, 0)})
+              All {days.length} Days ({days.reduce((acc, d) => acc + d.places.length, 0)})
             </button>
             {days.map((day) => (
               <button
@@ -173,8 +173,8 @@ export function MasterMapView({
           <Map
             id="master-overview-map"
             mapId="DEMO_MAP_ID"
-            defaultCenter={{ lat: 3.14, lng: 101.69 }}
-            defaultZoom={12}
+            defaultCenter={days[0]?.center || { lat: 3.14, lng: 101.69 }}
+            defaultZoom={days[0]?.zoom || 12}
             gestureHandling="greedy"
             disableDefaultUI={false}
             mapTypeControl={true}

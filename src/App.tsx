@@ -9,7 +9,7 @@ import { Toaster, toast } from 'sonner';
 import { AmpChronicleHeader } from './components/AmpChronicleHeader';
 import { ApiKeyBanner } from './components/ApiKeyBanner';
 import { KL2601DestinationView } from '@/destinations/malaysia/KL-26-01/index';
-import { KL_26_01_DESTINATION } from '@/destinations/malaysia/KL-26-01/data';
+import { getDestinationEntry, DEFAULT_DESTINATION_PATH } from '@/destinations/index';
 import { Place } from './types';
 
 export default function App() {
@@ -23,10 +23,14 @@ export default function App() {
     }
     return 'dark';
   });
+  const [currentDestinationPath, setCurrentDestinationPath] = useState<string>(DEFAULT_DESTINATION_PATH);
   const [currentTab, setCurrentTab] = useState<'chronicle' | 'master' | 'gallery'>('chronicle');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
   const [apiKeyModalOpen, setApiKeyModalOpen] = useState<boolean>(false);
+
+  const currentEntry = getDestinationEntry(currentDestinationPath);
+  const currentDestination = currentEntry.destination;
 
   // Sync theme with document html class and data-theme attribute
   useEffect(() => {
@@ -49,6 +53,15 @@ export default function App() {
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
 
+  const handleSelectDestination = (newPath: string) => {
+    setCurrentDestinationPath(newPath);
+    setSelectedPlaceId(null);
+    const newEntry = getDestinationEntry(newPath);
+    toast.success(`Switched to ${newEntry.title}`, {
+      description: `${newEntry.code} • ${newEntry.badge}`,
+    });
+  };
+
   return (
     <APIProvider apiKey={apiKey} libraries={['marker']}>
       <div className="min-h-screen bg-[#fafaf8] dark:bg-[#0b0d0b] text-[#0b0f0c] dark:text-[#f5f6ed] font-sans antialiased flex flex-col transition-colors selection:bg-[#f6833b] selection:text-black">
@@ -62,7 +75,9 @@ export default function App() {
           onSearchChange={setSearchQuery}
           apiKey={apiKey}
           onOpenApiKeyModal={() => setApiKeyModalOpen(!apiKeyModalOpen)}
-          totalStops={KL_26_01_DESTINATION.meta.totalStops}
+          totalStops={currentDestination.meta.totalStops}
+          currentDestinationId={currentDestinationPath}
+          onSelectDestination={handleSelectDestination}
         />
 
         {/* Google Maps API Key Drawer / Modal if toggled */}
@@ -84,6 +99,7 @@ export default function App() {
         <div className="flex-1 w-full max-w-5xl mx-auto flex flex-col items-stretch px-3 sm:px-6 md:px-8 py-6">
           <main id="destination-viewport" className="w-full min-w-0">
             <KL2601DestinationView
+              destination={currentDestination}
               currentTab={currentTab}
               onSelectTab={setCurrentTab}
               searchQuery={searchQuery}
