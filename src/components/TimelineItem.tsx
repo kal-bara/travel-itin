@@ -9,6 +9,8 @@ import {
   Camera,
   Maximize2,
   Sparkles,
+  Upload,
+  UserCheck,
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -23,6 +25,7 @@ export interface TimelineItemProps {
   isLast: boolean;
   photoLayout?: PhotoLayoutMode;
   onInspectPhoto?: (place: Place) => void;
+  onOpenUpload?: (place: Place) => void;
 }
 
 export function TimelineItem({
@@ -33,6 +36,7 @@ export function TimelineItem({
   isLast,
   photoLayout = 'editorial',
   onInspectPhoto,
+  onOpenUpload,
 }: TimelineItemProps) {
   const copyCoordinates = (e: MouseEvent) => {
     e.stopPropagation();
@@ -118,15 +122,40 @@ export function TimelineItem({
           </h3>
 
           <div className="flex items-center gap-1.5 shrink-0">
+            {onOpenUpload && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onOpenUpload(place);
+                }}
+                className={`inline-flex text-[11px] font-mono px-2 py-0.5 rounded-xs border items-center gap-1 transition cursor-pointer ${
+                  place.photo?.isCustom
+                    ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-700/50 hover:bg-emerald-100 dark:hover:bg-emerald-900/60'
+                    : 'text-[#405245] dark:text-[#88968d] hover:text-[#f6833b] dark:hover:text-[#f6833b] border-[#cbd6c8] dark:border-[#223027] bg-[#edf3ea] dark:bg-[#101613] hover:border-[#f6833b]/60'
+                }`}
+                title={place.photo?.isCustom ? 'Change your personal photo' : 'Upload your own photograph'}
+              >
+                {place.photo?.isCustom ? (
+                  <UserCheck className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                ) : (
+                  <Upload className="w-3 h-3 text-[#f6833b]" />
+                )}
+                <span className="hidden sm:inline">
+                  {place.photo?.isCustom ? 'Your Photo' : 'Upload'}
+                </span>
+              </button>
+            )}
+
             {place.photo && (
               <button
                 type="button"
                 onClick={handlePhotoClick}
                 className="hidden sm:inline-flex text-[11px] font-mono px-2 py-0.5 rounded-xs border items-center gap-1 text-[#607065] dark:text-[#88968d] hover:text-[#f6833b] dark:hover:text-[#f6833b] border-[#d2ddd0] dark:border-[#223027] bg-[#edf2ea] dark:bg-[#101613] hover:border-[#f6833b]/50 transition cursor-pointer"
-                title="Inspect iconic photograph"
+                title="Inspect photo in lightbox"
               >
                 <Camera className="w-3 h-3 text-[#f6833b]" />
-                <span>Photo</span>
+                <span>View</span>
               </button>
             )}
 
@@ -184,11 +213,20 @@ export function TimelineItem({
                 className="w-full h-full object-cover transition-transform duration-300 group-hover/photo:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-80" />
-              {place.photo.category && (
-                <span className="absolute top-1.5 left-1.5 text-[9px] font-mono px-1.5 py-0.5 rounded-xs bg-black/60 backdrop-blur-xs text-[#fbbf24] font-semibold">
-                  {place.photo.category}
-                </span>
-              )}
+              <div className="absolute top-1.5 left-1.5 flex items-center gap-1">
+                {place.photo.isCustom ? (
+                  <span className="text-[9px] font-mono px-1.5 py-0.5 rounded-xs bg-emerald-950/80 border border-emerald-500/50 text-emerald-400 font-bold flex items-center gap-0.5">
+                    <UserCheck className="w-2.5 h-2.5" />
+                    <span>Your Photo</span>
+                  </span>
+                ) : (
+                  place.photo.category && (
+                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded-xs bg-black/60 backdrop-blur-xs text-[#fbbf24] font-semibold">
+                      {place.photo.category}
+                    </span>
+                  )
+                )}
+              </div>
               <span className="absolute bottom-1.5 right-1.5 text-[10px] font-mono text-white/90 bg-black/60 px-1.5 py-0.5 rounded-xs flex items-center gap-1 group-hover/photo:text-[#f6833b] transition-colors">
                 <Maximize2 className="w-2.5 h-2.5" />
                 <span>Zoom</span>
@@ -226,18 +264,43 @@ export function TimelineItem({
                   {/* Subtle vignette/gradient */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/10 transition-opacity" />
 
-                  {/* Category Pill */}
-                  {place.photo.category && (
-                    <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-xs bg-black/65 backdrop-blur-md border border-white/15 text-[10px] font-mono uppercase tracking-wider text-[#fbbf24] flex items-center gap-1 font-semibold shadow-xs">
-                      <Sparkles className="w-2.5 h-2.5 text-[#f6833b]" />
-                      <span>{place.photo.category}</span>
-                    </div>
-                  )}
+                  {/* Category Pill and Custom Photo Badge */}
+                  <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5">
+                    {place.photo.isCustom && (
+                      <div className="px-2 py-0.5 rounded-xs bg-emerald-950/80 backdrop-blur-md border border-emerald-500/50 text-[10px] font-mono uppercase tracking-wider text-emerald-400 flex items-center gap-1 font-bold shadow-xs">
+                        <UserCheck className="w-2.5 h-2.5" />
+                        <span>Your Upload</span>
+                      </div>
+                    )}
+                    {place.photo.category && (
+                      <div className="px-2 py-0.5 rounded-xs bg-black/65 backdrop-blur-md border border-white/15 text-[10px] font-mono uppercase tracking-wider text-[#fbbf24] flex items-center gap-1 font-semibold shadow-xs">
+                        <Sparkles className="w-2.5 h-2.5 text-[#f6833b]" />
+                        <span>{place.photo.category}</span>
+                      </div>
+                    )}
+                  </div>
 
-                  {/* Expand Lightbox Cue */}
-                  <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-xs bg-black/60 hover:bg-black/80 backdrop-blur-md border border-white/20 text-[10px] font-mono text-white flex items-center gap-1 transition-all group-hover/photo:border-[#f6833b] group-hover/photo:text-[#f6833b]">
-                    <Maximize2 className="w-3 h-3" />
-                    <span>Expand Photo</span>
+                  {/* Expand Lightbox Cue & Upload button */}
+                  <div className="absolute top-2.5 right-2.5 flex items-center gap-1">
+                    {onOpenUpload && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onOpenUpload(place);
+                        }}
+                        className="px-2 py-0.5 rounded-xs bg-black/60 hover:bg-[#f6833b] hover:text-black backdrop-blur-md border border-white/20 text-[10px] font-mono text-white flex items-center gap-1 transition-all cursor-pointer"
+                        title={place.photo.isCustom ? "Edit custom photo" : "Upload your photo"}
+                      >
+                        <Upload className="w-2.5 h-2.5" />
+                        <span>{place.photo.isCustom ? "Edit" : "Change"}</span>
+                      </button>
+                    )}
+
+                    <div className="px-2 py-0.5 rounded-xs bg-black/60 hover:bg-black/80 backdrop-blur-md border border-white/20 text-[10px] font-mono text-white flex items-center gap-1 transition-all group-hover/photo:border-[#f6833b] group-hover/photo:text-[#f6833b]">
+                      <Maximize2 className="w-3 h-3" />
+                      <span>Expand</span>
+                    </div>
                   </div>
 
                   {/* Bottom Caption & Photo Tip on photo */}

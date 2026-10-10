@@ -16,6 +16,8 @@ export interface PlacePhoto {
     | string;
   photoTip?: string;
   aspectRatio?: '16:9' | '4:3' | '1:1';
+  isCustom?: boolean;
+  uploadedAt?: string;
 }
 
 export interface PlaceTag {

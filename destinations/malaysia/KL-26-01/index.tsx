@@ -4,7 +4,7 @@
  * Amp Chronicle styled destination module
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { toast } from 'sonner';
 import { Place } from '@/src/types';
@@ -14,7 +14,9 @@ import { TimelineItem, PhotoLayoutMode } from '@/src/components/TimelineItem';
 import { MasterMapView } from '@/src/components/MasterMapView';
 import { FeaturedChronicleBanner } from '@/src/components/FeaturedChronicleBanner';
 import { PhotoLightboxModal } from '@/src/components/PhotoLightboxModal';
+import { PhotoUploadModal } from '@/src/components/PhotoUploadModal';
 import { VisualChronicleGallery } from '@/src/components/VisualChronicleGallery';
+import { getCustomPhotos, CustomPhotoEntry } from '@/src/utils/photoStorage';
 import {
   ListOrdered,
   Sparkles,
@@ -33,6 +35,7 @@ import {
   LayoutGrid,
   AlignLeft,
   Eye,
+  Upload,
 } from 'lucide-react';
 
 export { KL_26_01_DESTINATION, KL_26_01_DAYS, KL_26_01_META };
@@ -56,6 +59,19 @@ export function KL2601DestinationView({
   const [photoLayout, setPhotoLayout] = useState<PhotoLayoutMode>('editorial');
   const [lightboxPlace, setLightboxPlace] = useState<Place | null>(null);
   const [isLightboxOpen, setIsLightboxOpen] = useState<boolean>(false);
+  const [uploadModalPlace, setUploadModalPlace] = useState<Place | null>(null);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState<boolean>(false);
+  const [customPhotos, setCustomPhotos] = useState<Record<string, CustomPhotoEntry>>(() =>
+    getCustomPhotos()
+  );
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      setCustomPhotos(getCustomPhotos());
+    };
+    window.addEventListener('custom-photos-updated', handleUpdate);
+    return () => window.removeEventListener('custom-photos-updated', handleUpdate);
+  }, []);
 
   const selectedPlaceId =
     controlledSelectedPlaceId !== undefined
@@ -63,7 +79,40 @@ export function KL2601DestinationView({
       : internalSelectedPlaceId;
 
   const destination = KL_26_01_DESTINATION;
-  const allPlaces = destination.days.flatMap((d) => d.places);
+
+  // Merge custom photos from localStorage onto default place photos
+  const activeDays = destination.days.map((day) => ({
+    ...day,
+    places: day.places.map((place) => {
+      const custom = customPhotos[place.id];
+      if (custom) {
+        return {
+          ...place,
+          photo: {
+            ...place.photo,
+            url: custom.url,
+            caption: custom.caption || place.photo?.caption || '',
+            photoTip: custom.photoTip !== undefined ? custom.photoTip : place.photo?.photoTip,
+            category: custom.category || place.photo?.category,
+            credit: custom.credit || 'Personal Photo',
+            isCustom: true,
+            uploadedAt: custom.uploadedAt,
+          },
+        };
+      }
+      return place;
+    }),
+  }));
+
+  const allPlaces = activeDays.flatMap((d) => d.places);
+
+  // Keep lightboxPlace synchronized with any custom updates
+  useEffect(() => {
+    if (lightboxPlace) {
+      const fresh = allPlaces.find((p) => p.id === lightboxPlace.id);
+      if (fresh) setLightboxPlace(fresh);
+    }
+  }, [customPhotos]);
 
   const handleSelectPlace = (place: Place | null) => {
     if (controlledOnSelectPlace) {
@@ -84,14 +133,19 @@ export function KL2601DestinationView({
     setIsLightboxOpen(true);
   };
 
+  const handleOpenUpload = (place: Place) => {
+    setUploadModalPlace(place);
+    setIsUploadModalOpen(true);
+  };
+
   // Filter days based on tab
-  let daysToRender = destination.days;
+  let daysToRender = activeDays;
   if (currentTab === 'day-1') {
-    daysToRender = destination.days.filter((d) => d.dayNumber === 1);
+    daysToRender = activeDays.filter((d) => d.dayNumber === 1);
   } else if (currentTab === 'day-2') {
-    daysToRender = destination.days.filter((d) => d.dayNumber === 2);
+    daysToRender = activeDays.filter((d) => d.dayNumber === 2);
   } else if (currentTab === 'day-3') {
-    daysToRender = destination.days.filter((d) => d.dayNumber === 3);
+    daysToRender = activeDays.filter((d) => d.dayNumber === 3);
   }
 
   // Filter places based on search query
@@ -117,9 +171,10 @@ export function KL2601DestinationView({
       {/* When on Gallery tab, show the curated Visual Chronicle Gallery */}
       {currentTab === 'gallery' ? (
         <VisualChronicleGallery
-          days={destination.days}
+          days={activeDays}
           onSelectPlace={handleSelectPlace}
           onInspectPhoto={handleOpenLightbox}
+          onOpenUpload={handleOpenUpload}
           onJumpToItinerary={(dayNumber, placeId) => {
             if (onSelectTab) {
               onSelectTab(`day-${dayNumber}` as any);
@@ -130,7 +185,7 @@ export function KL2601DestinationView({
       ) : currentTab === 'master' ? (
         /* When on Master Map tab, show MasterMapView directly */
         <MasterMapView
-          days={destination.days}
+          days={activeDays}
           selectedPlaceId={selectedPlaceId}
           onSelectPlace={handleSelectPlace}
           onInspectPhoto={handleOpenLightbox}
@@ -306,6 +361,7 @@ export function KL2601DestinationView({
                         isLast={index === matchingPlaces.length - 1}
                         photoLayout={photoLayout}
                         onInspectPhoto={handleOpenLightbox}
+                        onOpenUpload={handleOpenUpload}
                       />
                     ))}
                   </div>
@@ -360,6 +416,17 @@ export function KL2601DestinationView({
         allPlaces={allPlaces}
         onClose={() => setIsLightboxOpen(false)}
         onSelectPlace={(p) => setLightboxPlace(p)}
+        onOpenUpload={handleOpenUpload}
+      />
+
+      {/* Photo Upload & Personalization Modal */}
+      <PhotoUploadModal
+        isOpen={isUploadModalOpen}
+        place={uploadModalPlace}
+        onClose={() => setIsUploadModalOpen(false)}
+        onPhotoSaved={(placeId) => {
+          // Handled via custom-photos-updated event
+        }}
       />
 
       {/* Destination Metadata Footer */}

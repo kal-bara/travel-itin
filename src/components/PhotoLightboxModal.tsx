@@ -10,6 +10,9 @@ import {
   Clock,
   Sparkles,
   Compass,
+  Upload,
+  UserCheck,
+  RotateCcw,
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -19,6 +22,7 @@ interface PhotoLightboxModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectPlace: (place: Place) => void;
+  onOpenUpload?: (place: Place) => void;
 }
 
 export function PhotoLightboxModal({
@@ -27,6 +31,7 @@ export function PhotoLightboxModal({
   isOpen,
   onClose,
   onSelectPlace,
+  onOpenUpload,
 }: PhotoLightboxModalProps) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -144,6 +149,14 @@ export function PhotoLightboxModal({
               </div>
             )}
 
+            {/* Custom User Photo Badge over Photo */}
+            {place.photo.isCustom && (
+              <div className="absolute top-3 right-3 px-2.5 py-1 rounded-xs bg-emerald-950/80 backdrop-blur-md border border-emerald-500/40 text-[10px] font-mono uppercase tracking-wider text-emerald-400 flex items-center gap-1 font-bold">
+                <UserCheck className="w-3 h-3" />
+                <span>Your Upload</span>
+              </div>
+            )}
+
             {/* Photo attribution / credit */}
             {place.photo.credit && (
               <div className="absolute bottom-2 right-2 text-[10px] font-mono text-white/50 bg-black/50 px-2 py-0.5 rounded-xs backdrop-blur-xs">
@@ -178,9 +191,16 @@ export function PhotoLightboxModal({
 
               {/* Editorial Caption */}
               <div className="p-3 rounded-xs bg-[#19231e] border border-[#2b3a30] text-xs text-[#dfdfc1] leading-relaxed">
-                <span className="font-mono text-[10px] uppercase text-[#f6833b] block mb-1 font-semibold">
-                  Visual Character
-                </span>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="font-mono text-[10px] uppercase text-[#f6833b] font-semibold">
+                    Visual Character
+                  </span>
+                  {place.photo.isCustom && (
+                    <span className="text-[9px] font-mono uppercase text-emerald-400 bg-emerald-950/60 px-1 rounded-2xs border border-emerald-800">
+                      Personalized
+                    </span>
+                  )}
+                </div>
                 "{place.photo.caption}"
               </div>
 
@@ -194,6 +214,25 @@ export function PhotoLightboxModal({
                   <p className="text-[11px] leading-relaxed">
                     {place.photo.photoTip}
                   </p>
+                </div>
+              )}
+
+              {/* User Photo Upload Callout */}
+              {onOpenUpload && (
+                <div className="p-2.5 rounded-xs bg-[#16201b] border border-[#2e3e34] flex items-center justify-between gap-2 text-xs font-mono">
+                  <div className="flex items-center gap-2 text-[#dfdfc1]">
+                    <Upload className="w-3.5 h-3.5 text-[#f6833b]" />
+                    <span className="text-[11px]">
+                      {place.photo.isCustom ? 'Uploaded photo active' : 'Have your own photo?'}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => onOpenUpload(place)}
+                    className="px-2.5 py-1 rounded-2xs bg-[#f6833b] hover:bg-[#fa8e49] text-[#0b0d0b] font-bold text-[11px] transition cursor-pointer"
+                  >
+                    {place.photo.isCustom ? 'Change Photo' : 'Upload Yours'}
+                  </button>
                 </div>
               )}
 

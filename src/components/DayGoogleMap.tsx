@@ -183,10 +183,16 @@ export function DayGoogleMap({
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
-                    {selectedPlace.photo.category && (
-                      <span className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-xs bg-black/70 backdrop-blur-xs text-[9px] font-mono text-amber-300 font-bold">
-                        {selectedPlace.photo.category}
+                    {selectedPlace.photo.isCustom ? (
+                      <span className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-xs bg-emerald-950/90 border border-emerald-500/40 text-[9px] font-mono text-emerald-300 font-bold">
+                        Your Photo
                       </span>
+                    ) : (
+                      selectedPlace.photo.category && (
+                        <span className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-xs bg-black/70 backdrop-blur-xs text-[9px] font-mono text-amber-300 font-bold">
+                          {selectedPlace.photo.category}
+                        </span>
+                      )
                     )}
                     <span className="absolute bottom-1.5 right-1.5 text-[9px] font-mono text-white bg-black/60 px-1.5 py-0.5 rounded-xs flex items-center gap-1 group-hover:text-[#f6833b] transition-colors">
                       <Camera className="w-2.5 h-2.5" />
